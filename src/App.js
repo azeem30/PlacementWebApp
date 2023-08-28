@@ -1,13 +1,14 @@
-import './App.css';
-import Background from './Components/Background';
-import Questions from './Components/Questions';
+import './App.css'; 
+import Navbar from './Components/studentComponents/Navbar';
+import Sthome from './Components/studentComponents/Sthome';
 
 function App() {
+  //Aptify is a temporary title
   return (
-    <div>
-      <Background />
-      <Questions />
-    </div>
+    <>
+    <Navbar title='Aptify'/>
+    <Sthome />
+    </>
   );
 }
 
