@@ -1,34 +1,34 @@
 import React from 'react'
 
-export default function Sthome() {
-    let studentHomeStyle = {
+export default function TcHome() {
+    let teacherHomeStyle = {
         width: '100%',
         height: '44vw'
     };
     let imageStyle = {
-      borderBottom: '1px solid black'
+        borderBottom: '1px solid black'
     };
-    let cardStyle = {
+    let cardStyle ={
         width: '18rem',
         positon: 'absolute',
         top: '20px',
     };
   return (
-    <div className='bg-primary-subtle bg-opacity-25' style={studentHomeStyle}>
+    <div className='bg-primary-subtle bg-opacity-25' style={teacherHomeStyle}>
       <div className='d-flex justify-content-evenly'>
         <div className="card text-center mb-3 border border-danger border-2" style={cardStyle}>
-        <img style={imageStyle} src="https://www.teachingenglish.org.uk/sites/teacheng/files/styles/wide/public/images/teens_and_exams_iStock_000005780399XSmall_0.jpg?itok=ElZYWt14" className="card-img-top" alt="..."/>
+        <img style={imageStyle} src="https://cdn.britannica.com/30/220330-050-339CB471/Multiple-Choice-Test-Exam.jpg?w=600&q=60" className="card-img-top" alt="..."/>
             <div className="card-body">
-                <h5 className="card-title">Give Tests!</h5>
-                <p className="card-text">Get stronger and prepare yourself for the final aptitude.</p>
-                <a href="#" className="btn btn-info fw-semibold border border-primary">Give Tests</a>
+                <h5 className="card-title">Conduct tests!</h5>
+                <p className="card-text">Prepare the students for the final aptitude.</p>
+                <a href="#" className="btn btn-info fw-semibold border border-primary">Schedule Test</a>
             </div>
         </div>
         <div className="card text-center mb-3 border border-danger border-2" style={cardStyle}>
         <img style={imageStyle} src="https://img.paperform.co/fetch/f_jpg,w_1800/https://s3.amazonaws.com/paperform-blog/2020/12/How-To-Analyze-Survey-Results.png" className="card-img-top" alt="..."/>
             <div className="card-body">
-                <h5 className="card-title">Analyze your Results!</h5>
-                <p className="card-text">See where you lack and improve your performances.  </p>
+                <h5 className="card-title">Analyze the Results!</h5>
+                <p className="card-text">See where students lack and improve their performances.</p>
                 <a href="#" className="btn btn-info fw-semibold border border-primary">Check Scores</a>
             </div>
         </div>
