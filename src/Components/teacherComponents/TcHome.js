@@ -1,10 +1,7 @@
 import React from 'react'
+import Layout from '../Layout';
 
 export default function TcHome() {
-    let teacherHomeStyle = {
-        width: '100%',
-        height: '44vw'
-    };
     let imageStyle = {
         borderBottom: '1px solid black'
     };
@@ -14,7 +11,7 @@ export default function TcHome() {
         top: '20px',
     };
   return (
-    <div className='bg-primary-subtle bg-opacity-25' style={teacherHomeStyle}>
+    <Layout>
       <div className='d-flex justify-content-evenly'>
         <div className="card text-center mb-3 border border-danger border-2" style={cardStyle}>
         <img style={imageStyle} src="https://cdn.britannica.com/30/220330-050-339CB471/Multiple-Choice-Test-Exam.jpg?w=600&q=60" className="card-img-top" alt="..."/>
@@ -33,6 +30,6 @@ export default function TcHome() {
             </div>
         </div>
       </div>  
-    </div>
+    </Layout>
   )
 }

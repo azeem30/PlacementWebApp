@@ -1,8 +1,10 @@
 import React from 'react'
+import Layout from '../Layout'
 
 export default function Tclogin() {
     let logCardStyle = {
-        marginTop: '6%'
+        position: 'relative',
+        top: '6%'
     }
     let logButtonStyle ={
         marginTop: '30px',
@@ -20,6 +22,7 @@ export default function Tclogin() {
         marginTop: '5px'
     }
   return (
+    <Layout>
     <div className="container w-25 card border border-dark-subtle" style={logCardStyle}>
         <div className="card-body">
             <div className='d-flex justify-content-center'>
@@ -43,5 +46,6 @@ export default function Tclogin() {
             </div>
         </div>
     </div>
+    </Layout>
   )
 }

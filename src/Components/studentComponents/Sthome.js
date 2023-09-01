@@ -1,10 +1,7 @@
 import React from 'react'
+import Layout from '../Layout';
 
 export default function Sthome() {
-    let studentHomeStyle = {
-        width: '100%',
-        height: '44vw'
-    };
     let imageStyle = {
       borderBottom: '1px solid black'
     };
@@ -14,7 +11,7 @@ export default function Sthome() {
         top: '20px',
     };
   return (
-    <div className='bg-primary-subtle bg-opacity-25' style={studentHomeStyle}>
+    <Layout>
       <div className='d-flex justify-content-evenly'>
         <div className="card text-center mb-3 border border-danger border-2" style={cardStyle}>
         <img style={imageStyle} src="https://www.teachingenglish.org.uk/sites/teacheng/files/styles/wide/public/images/teens_and_exams_iStock_000005780399XSmall_0.jpg?itok=ElZYWt14" className="card-img-top" alt="..."/>
@@ -33,6 +30,6 @@ export default function Sthome() {
             </div>
         </div>
       </div>  
-    </div>
+    </Layout>
   )
 }
