@@ -18,11 +18,11 @@ export default function Stsign() {
   function calcCGPI(sgpi){
     return sgpi*10;
   }
-let logCardStyle = {
+let signCardStyle = {
     position: 'relative',
     top: '4%'
 }
-let logButtonStyle ={
+let signButtonStyle ={
     marginTop: '30px',
 }
 let belowSeparator={
@@ -39,7 +39,7 @@ let departmentDropdownStyle = {
 }
   return (
     <Layout>
-      <div className="container w-25 card border border-dark-subtle" style={logCardStyle}>
+      <div className="container w-25 card border border-dark-subtle" style={signCardStyle}>
         <div className="card-body">
             <div className='d-flex justify-content-center'>
                 <h4>Student Signup</h4>
@@ -105,7 +105,7 @@ let departmentDropdownStyle = {
             </tr>
             </table>))}
             <div className='border border-secondary' style={belowSeparator}></div>
-            <div className="d-flex justify-content-center" style={logButtonStyle}>
+            <div className="d-flex justify-content-center" style={signButtonStyle}>
                 <button type="button" className="btn btn-outline-success">Register</button>
             </div>
         </div>
