@@ -7,7 +7,6 @@ export default function Stsign() {
   const [department, setDepartment] = useState('');
   const [semester, setSemester] = useState('');
   const [name, setName] = useState('');
-
   const [results, setResults] = useState([
     { sem: 1, sgpi: '', cgpi: '', required: true},
     { sem: 2, sgpi: '', cgpi: '', required: true},
