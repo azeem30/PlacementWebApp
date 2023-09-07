@@ -3,19 +3,11 @@ import React, {useState} from 'react'
 export default function Questions() {
   let placingContainer = {
     position: 'absolute',
-    top: '10%',
+    top: '12%',
     left: '5%',
     width: '60%',
     height: '268px'
   }  
-  let placingNextButton = {
-    position: 'relative',
-    left: '84%'
-  }
-  let placingPreviousButton = {
-    position: 'relative',
-    left: '0'
-  }
   let timerStyle = {
     width: '70px',
     height:'30px',
