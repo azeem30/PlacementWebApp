@@ -6,6 +6,8 @@ export default function Stsign() {
   const [password, setPassword] = useState('');
   const [department, setDepartment] = useState('');
   const [semester, setSemester] = useState('');
+  const [name, setName] = useState('');
+
   const [results, setResults] = useState([
     { sem: 1, sgpi: '', cgpi: '', required: true},
     { sem: 2, sgpi: '', cgpi: '', required: true},
@@ -46,6 +48,10 @@ let departmentDropdownStyle = {
                 <h4>Student Signup</h4>
             </div>
             <div className='border border-secondary' style={aboveSeparator}></div>
+	    <div className="mt-3 mb-3">
+                <label for="studentSignName" className="form-label">Name</label>
+                <input type="text" className="form-control" id="studentSignName" onChange={(event) => {setName(event.target.value);}} required/>
+            </div>
             <div className="mt-3 mb-3">
                 <label for="studentSignRollNo" className="form-label">Roll No.</label>
                 <input type="text" className="form-control" id="studentSignRollNo" onChange={(event) => {setId(event.target.value);}} required/>
