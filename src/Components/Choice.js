@@ -19,16 +19,19 @@ export default function Choice() {
         marginLeft: '43%',
         width: '150px'
     }
+    let linkStyle = {
+        textDecoration: 'none'
+    }
   return (
         <div className="d-flex justify-content-center">
             <div class="container w-100" style={choiceLeftStyle}>
                 <div class="card-body">
-                    <button className="btn btn-success border border-white" style={choiceButtonStyle}><Link className="text-white" to="/student_signup">I am a Student</Link></button>
+                    <button className="btn btn-success border border-white" style={choiceButtonStyle}><Link style={linkStyle} className="text-white" to="/student_signup">I am a Student</Link></button>
                 </div>
             </div>
             <div class="container w-100" style={choiceRightStyle}>
                 <div class="card-body">
-                <button className="btn btn-success border border-white" style={choiceButtonStyle}><Link className='text-white' to="/teacher_signup">I am a Teacher</Link></button>
+                <button className="btn btn-success border border-white" style={choiceButtonStyle}><Link style={linkStyle} className='text-white' to="/teacher_signup">I am a Teacher</Link></button>
                 </div>
             </div>
         </div>
