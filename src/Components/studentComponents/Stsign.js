@@ -5,6 +5,7 @@ export default function Stsign() {
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
   const [department, setDepartment] = useState('');
+  const [semester, setSemester] = useState('');
   const [results, setResults] = useState([
     { sem: 1, sgpi: '', cgpi: '', required: true},
     { sem: 2, sgpi: '', cgpi: '', required: true},
@@ -52,6 +53,19 @@ let departmentDropdownStyle = {
             <div className="mb-3">
                 <label for="studentSignPassword" className="form-label">Password</label>
                 <input type="password" id="studentSignPassword" onChange={(event)=>{setPassword(event.target.value);}} required className="form-control" aria-describedby="passwordHelpBlock"/>
+            </div>
+            <div className="dropdown" style={departmentDropdownStyle}>
+              <button className="btn btn-success dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                {("Sem " + semester) || 'Semester'}
+              </button>
+              <ul className="dropdown-menu">
+                <li><a id="s3" onClick={()=>{setSemester('3')}} className="dropdown-item" href="#">3</a></li>
+                <li><a id="s4" onClick={()=>{setSemester('4')}} className="dropdown-item" href="#">4</a></li>
+                <li><a id="s5" onClick={()=>{setSemester('5')}} className="dropdown-item" href="#">5</a></li>
+                <li><a id="s6" onClick={()=>{setSemester('6')}} className="dropdown-item" href="#">6</a></li>
+                <li><a id="s7" onClick={()=>{setSemester('7')}} className="dropdown-item" href="#">7</a></li>
+                <li><a id="s8" onClick={()=>{setSemester('8')}} className="dropdown-item" href="#">8</a></li>
+              </ul>
             </div>
             <div className="dropdown" style={departmentDropdownStyle}>
               <button className="btn btn-success dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
