@@ -8,7 +8,11 @@
     "@testing-library/user-event": "^13.5.0",
     "cors": "^2.8.5",
     "express": "^4.18.2",
+<<<<<<< HEAD
+    "mysql": "^2.18.1",
+=======
     "mysql2": "^3.6.0",
+>>>>>>> 67e69ee793b3d6627e681e1c18a98e51e0fb239f
     "nodemon": "^3.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
