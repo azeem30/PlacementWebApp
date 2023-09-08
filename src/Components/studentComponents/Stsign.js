@@ -3,12 +3,13 @@ import Layout from '../Layout'
 
 export default function Stsign() {
   const [id, setId] = useState('');
+  const [studentEmail, setStudentEmail] = useState('');
   const [password, setPassword] = useState('');
   const [department, setDepartment] = useState('');
   const [semester, setSemester] = useState('');
   const [name, setName] = useState('');
   const [results, setResults] = useState([
-    { sem: 1, sgpi: '', cgpi: '', required: true},
+    { sem: 1, sgpi: '', cgpi: '', required: true},  
     { sem: 2, sgpi: '', cgpi: '', required: true},
     { sem: 3, sgpi: '', cgpi: '', required: false},
     { sem: 4, sgpi: '', cgpi: '', required: false},
@@ -47,9 +48,13 @@ let departmentDropdownStyle = {
                 <h4>Student Signup</h4>
             </div>
             <div className='border border-secondary' style={aboveSeparator}></div>
-	    <div className="mt-3 mb-3">
+	          <div className="mt-3 mb-3">
                 <label for="studentSignName" className="form-label">Name</label>
                 <input type="text" className="form-control" id="studentSignName" onChange={(event) => {setName(event.target.value);}} required/>
+            </div>
+            <div className="mt-3 mb-3">
+              <label for="studentSignMail" className="form-label">Email</label>
+              <input type="email" id="studentSignMail" placeholder='name@example.com' className='form-control' onChange={(event)=>{setStudentEmail(event.target.value)}} required/>
             </div>
             <div className="mt-3 mb-3">
                 <label for="studentSignRollNo" className="form-label">Roll No.</label>

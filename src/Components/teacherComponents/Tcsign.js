@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import Layout from '../Layout'
 
 export default function Tcsign() {
+  const [tRoll, setTRoll] = useState('');
+  const [tName, setTName] = useState('');
   const [tDepartment, tSetDepartment] = useState('');
   const [tMail, tSetMail] = useState('');
   const [tPassword, tSetPassword] = useState('');
@@ -29,12 +31,20 @@ let signButtonStyle ={
                 <h4>Teacher Signup</h4>
             </div>
             <div style={separator} className='bg-secondary'></div>
+            <div className="mb-3">
+              <label htmlFor="teacherSignRoll" className='form-label'>Roll no.</label>
+              <input type="text" id="tecaherSignRoll" onChange={(event)=>{setTRoll(event.target.value)}} className="form-control" required/>
+            </div>
+            <div className="mb-3">
+              <label htmlFor="teacherSignName" className='form-label'>Name</label>
+              <input type="text" id="tecaherSignName" onChange={(event)=>{setTName(event.target.value)}} className="form-control" required/>
+            </div>
             <div className="mt-2 mb-3">
-                <label for="teacherSignMail" className="form-label">Email</label>
+                <label htmlFor="teacherSignMail" className="form-label">Email</label>
                 <input type="email" onChange={(event)=>{tSetMail(event.target.value)}} className="form-control" id="teacherSignMail" required/>
             </div>
             <div className="mb-3">
-                <label for="teacherSignPassword" className="form-label">Password</label>
+                <label htmlFor="teacherSignPassword" className="form-label">Password</label>
                 <input type="password" id="teacherSignPassword" onChange={(event)=>{tSetPassword(event.target.value)}} required className="form-control" aria-describedby="passwordHelpBlock"/>
             </div>
             <div className="dropdown mb-3" style={departmentDropdownStyle}>
