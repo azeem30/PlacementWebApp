@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import Layout from '../Layout'
+import { emailPattern, passwordPattern } from '../patterns/patterns';
 
 export default function Tcsign() {
   const [tRoll, setTRoll] = useState('');
@@ -7,6 +8,22 @@ export default function Tcsign() {
   const [tDepartment, tSetDepartment] = useState('');
   const [tMail, tSetMail] = useState('');
   const [tPassword, tSetPassword] = useState('');
+  const registerTeacher = () => {
+    const teacherEmailError = document.getElementById('teacher-email-error');
+    const teacherPasswordError = document.getElementById('teacher-password-error');
+    if(!emailPattern.test(tMail)){
+      teacherEmailError.textContent = 'Invalid email format!'
+    }
+    else {
+      teacherEmailError.textContent = "";
+    }
+    if(!passwordPattern.test(tPassword)){
+      teacherPasswordError.textContent = 'The password should contain uppercase letters, one special symbol, numbers and should be 8 characters long'
+    }
+    else{
+      teacherPasswordError.textContent = '';
+    }
+  }
   let signCardStyle = {
     position: 'relative',
     top: '4%'
@@ -42,10 +59,12 @@ let signButtonStyle ={
             <div className="mt-2 mb-3">
                 <label htmlFor="teacherSignMail" className="form-label">Email</label>
                 <input type="email" onChange={(event)=>{tSetMail(event.target.value)}} className="form-control" id="teacherSignMail" required/>
+                <p className='text-danger' id='teacher-email-error'></p>
             </div>
             <div className="mb-3">
                 <label htmlFor="teacherSignPassword" className="form-label">Password</label>
                 <input type="password" id="teacherSignPassword" onChange={(event)=>{tSetPassword(event.target.value)}} required className="form-control" aria-describedby="passwordHelpBlock"/>
+                <p className='text-danger' id='teacher-password-error'></p>
             </div>
             <div className="dropdown mb-3" style={departmentDropdownStyle}>
               <button className="btn btn-success dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -61,7 +80,7 @@ let signButtonStyle ={
             </div>
             <div className='bg-secondary' style={separator}></div>
             <div className="d-flex justify-content-center" style={signButtonStyle}>
-                <button type="button" className="btn btn-outline-success">Register</button>
+                <button type="button" onClick={registerTeacher} className="btn btn-outline-success">Register</button>
             </div>
         </div>
       </div>
