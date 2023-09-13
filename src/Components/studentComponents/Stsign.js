@@ -1,7 +1,8 @@
 import React, {useState} from 'react'
 import Layout from '../Layout'
+import {emailPattern, passwordPattern} from '../patterns/patterns'
 
-export default function Stsign() {
+export default function Stsign() { 
   const [id, setId] = useState('');
   const [studentEmail, setStudentEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -20,6 +21,22 @@ export default function Stsign() {
   ]);
   function calcCGPI(sgpi){
     return sgpi*10;
+  }
+  const registerStudent = () => {
+    const email_error = document.getElementById('email-error');
+    if(!emailPattern.test(studentEmail)){
+      email_error.textContent = 'Invalid email format!';
+    }
+    else{
+      email_error.textContent = '';
+    }
+    const password_error = document.getElementById('password-error');
+    if(!passwordPattern.test(password)){
+      password_error.textContent = 'The password should contain uppercase letters, one special symbol, numbers and should be 8 characters long';
+    }
+    else{
+      password_error.textContent = '';
+    }
   }
 let signCardStyle = {
     position: 'relative',
@@ -55,6 +72,7 @@ let departmentDropdownStyle = {
             <div className="mt-3 mb-3">
               <label for="studentSignMail" className="form-label">Email</label>
               <input type="email" id="studentSignMail" placeholder='name@example.com' className='form-control' onChange={(event)=>{setStudentEmail(event.target.value)}} required/>
+              <p className='text-danger' id='email-error'></p>
             </div>
             <div className="mt-3 mb-3">
                 <label for="studentSignRollNo" className="form-label">Roll No.</label>
@@ -63,6 +81,7 @@ let departmentDropdownStyle = {
             <div className="mb-3">
                 <label for="studentSignPassword" className="form-label">Password</label>
                 <input type="password" id="studentSignPassword" onChange={(event)=>{setPassword(event.target.value);}} required className="form-control" aria-describedby="passwordHelpBlock"/>
+                <p className='text-danger' id='password-error'></p>
             </div>
             <div className="dropdown" style={departmentDropdownStyle}>
               <button className="btn btn-success dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -130,7 +149,7 @@ let departmentDropdownStyle = {
             </table>))}
             <div className='border border-secondary' style={belowSeparator}></div>
             <div className="d-flex justify-content-center" style={signButtonStyle}>
-                <button type="button" className="btn btn-outline-success">Register</button>
+                <button type="button" onClick={registerStudent} className="btn btn-outline-success">Register</button>
             </div>
         </div>
     </div>
