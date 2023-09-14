@@ -5,10 +5,10 @@ import {emailPattern, passwordPattern} from '../patterns/patterns'
 export default function Stsign() { 
   const [id, setId] = useState('');
   const [studentEmail, setStudentEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [department, setDepartment] = useState('');
-  const [semester, setSemester] = useState('');
-  const [name, setName] = useState('');
+  const [studentPassword, setStudentPassword] = useState('');
+  const [department, setDepartment] = useState(1);
+  const [semester, setSemester] = useState(1);
+  const [studentName, setStudentName] = useState('');
   const [results, setResults] = useState([
     { sem: 1, sgpi: '', cgpi: '', required: true},  
     { sem: 2, sgpi: '', cgpi: '', required: true},
@@ -31,13 +31,35 @@ export default function Stsign() {
       email_error.textContent = '';
     }
     const password_error = document.getElementById('password-error');
-    if(!passwordPattern.test(password)){
+    if(!passwordPattern.test(studentPassword)){
       password_error.textContent = 'The password should contain uppercase letters, one special symbol, numbers and should be 8 characters long';
     }
     else{
       password_error.textContent = '';
     }
-  }
+    const studentData = {
+      roll_no: id,
+      email: studentEmail,
+      name: studentName,
+      password: studentPassword,
+      department_id: department,
+      semester: semester,
+      sgpi: results.map((result) => result.sgpi),
+      cgpi: results.map((result) => result.cgpi)
+    };
+    
+    fetch('/student_signup', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(studentData),
+    }).then((response) => response.json())
+      .then((studentData) => {console.log(studentData);
+      }).catch((error)=>{console.error('Error: ', error)});
+      
+  };
+
 let signCardStyle = {
     position: 'relative',
     top: '4%'
@@ -67,7 +89,7 @@ let departmentDropdownStyle = {
             <div className='border border-secondary' style={aboveSeparator}></div>
 	          <div className="mt-3 mb-3">
                 <label for="studentSignName" className="form-label">Name</label>
-                <input type="text" className="form-control" id="studentSignName" onChange={(event) => {setName(event.target.value);}} required/>
+                <input type="text" className="form-control" id="studentSignName" onChange={(event) => {setStudentName(event.target.value);}} required/>
             </div>
             <div className="mt-3 mb-3">
               <label for="studentSignMail" className="form-label">Email</label>
@@ -80,7 +102,7 @@ let departmentDropdownStyle = {
             </div>
             <div className="mb-3">
                 <label for="studentSignPassword" className="form-label">Password</label>
-                <input type="password" id="studentSignPassword" onChange={(event)=>{setPassword(event.target.value);}} required className="form-control" aria-describedby="passwordHelpBlock"/>
+                <input type="password" id="studentSignPassword" onChange={(event)=>{setStudentPassword(event.target.value);}} required className="form-control" aria-describedby="passwordHelpBlock"/>
                 <p className='text-danger' id='password-error'></p>
             </div>
             <div className="dropdown" style={departmentDropdownStyle}>
@@ -88,12 +110,12 @@ let departmentDropdownStyle = {
                 {("Sem " + semester) || 'Semester'}
               </button>
               <ul className="dropdown-menu">
-                <li><a id="s3" onClick={()=>{setSemester('3')}} className="dropdown-item" href="#">3</a></li>
-                <li><a id="s4" onClick={()=>{setSemester('4')}} className="dropdown-item" href="#">4</a></li>
-                <li><a id="s5" onClick={()=>{setSemester('5')}} className="dropdown-item" href="#">5</a></li>
-                <li><a id="s6" onClick={()=>{setSemester('6')}} className="dropdown-item" href="#">6</a></li>
-                <li><a id="s7" onClick={()=>{setSemester('7')}} className="dropdown-item" href="#">7</a></li>
-                <li><a id="s8" onClick={()=>{setSemester('8')}} className="dropdown-item" href="#">8</a></li>
+                <li><a id="s3" onClick={()=>{setSemester(3)}} className="dropdown-item">3</a></li>
+                <li><a id="s4" onClick={()=>{setSemester(4)}} className="dropdown-item">4</a></li>
+                <li><a id="s5" onClick={()=>{setSemester(5)}} className="dropdown-item">5</a></li>
+                <li><a id="s6" onClick={()=>{setSemester(6)}} className="dropdown-item">6</a></li>
+                <li><a id="s7" onClick={()=>{setSemester(7)}} className="dropdown-item">7</a></li>
+                <li><a id="s8" onClick={()=>{setSemester(8)}} className="dropdown-item">8</a></li>
               </ul>
             </div>
             <div className="dropdown" style={departmentDropdownStyle}>
@@ -101,11 +123,11 @@ let departmentDropdownStyle = {
                 {department || 'Department'}
               </button>
               <ul className="dropdown-menu">
-                <li><a id="cs" onClick={()=>{setDepartment('Computer Science')}} className="dropdown-item" href="#">Computer Science</a></li>
-                <li><a id="it" onClick={()=>{setDepartment('I.T.')}} className="dropdown-item" href="#">I.T.</a></li>
-                <li><a id="elect" onClick={()=>{setDepartment('Electrical')}} className="dropdown-item" href="#">Electrical</a></li>
-                <li><a id="extc" onClick={()=>{setDepartment('EXTC')}} className="dropdown-item" href="#">EXTC</a></li>
-                <li><a id="mech" onClick={()=>{setDepartment('Mechanical')}} className="dropdown-item" href="#">Mechanical</a></li>
+                <li><a id="cs" onClick={()=>{setDepartment(1)}} className="dropdown-item">Computer Science</a></li>
+                <li><a id="it" onClick={()=>{setDepartment(2)}} className="dropdown-item">I.T.</a></li>
+                <li><a id="elect" onClick={()=>{setDepartment(4)}} className="dropdown-item">Electrical</a></li>
+                <li><a id="extc" onClick={()=>{setDepartment(3)}} className="dropdown-item">EXTC</a></li>
+                <li><a id="mech" onClick={()=>{setDepartment(5)}} className="dropdown-item">Mechanical</a></li>
               </ul>
             </div>
             <div className='border border-secondary' style={belowSeparator}></div>
