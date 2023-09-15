@@ -1,5 +1,6 @@
 import React from 'react'
 import Layout from '../Layout';
+import { Link } from 'react-router-dom';
 
 export default function Sthome() {
     let imageStyle = {
@@ -18,7 +19,7 @@ export default function Sthome() {
             <div className="card-body">
                 <h5 className="card-title">Give Tests!</h5>
                 <p className="card-text">Get stronger and prepare yourself for the final aptitude.</p>
-                <a href="#" className="btn btn-info fw-semibold border border-primary">Give Tests</a>
+                <Link to="/pending_tests" className="btn btn-info fw-semibold border border-primary">Give Tests</Link>
             </div>
         </div>
         <div className="card text-center mb-3 border border-danger border-2" style={cardStyle}>
