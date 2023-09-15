@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
+import axios from 'axios'
 import Layout from '../Layout'
 import {emailPattern, passwordPattern} from '../patterns/patterns'
-import axios from 'axios'
 
 export default function Stsign() { 
   const [id, setId] = useState('');
@@ -20,46 +20,43 @@ export default function Stsign() {
     { sem: 7, sgpi: '', cgpi: '', required: false},
     { sem: 8, sgpi: '', cgpi: '', required: false},
   ]);
+  const studentData = {
+    roll_no: id,
+    email: studentEmail,
+    name: studentName,
+    password: studentPassword,
+    department_id: department,
+    semester: semester,
+    sgpi: results.map((result) => result.sgpi.toString()),
+    cgpi: results.map((result) => result.cgpi.toString())
+  };
   function calcCGPI(sgpi){
     return sgpi*10;
   }
-
-  const registerStudent = () => {
-    
+  const registerStudent = (event) => {
+    event.preventDefault();
     const email_error = document.getElementById('email-error');
+    const password_error = document.getElementById('password-error');
     if(!emailPattern.test(studentEmail)){
       email_error.textContent = 'Invalid email format!';
     }
-    else{
-      email_error.textContent = '';
-    }
-    const password_error = document.getElementById('password-error');
-    if(!passwordPattern.test(studentPassword)){
+    else if(!passwordPattern.test(studentPassword)){
       password_error.textContent = 'The password should contain uppercase letters, one special symbol, numbers and should be 8 characters long';
     }
     else{
-      password_error.textContent = '';
-    }
-    const studentData = {
-      roll_no: id,
-      email: studentEmail,
-      name: studentName,
-      password: studentPassword,
-      department_id: department,
-      semester: semester,
-      sgpi: results.map((result) => result.sgpi),
-      cgpi: results.map((result) => result.cgpi)
-    };
-    
-    const url = "http://localhost:9999/student_signup";
-
-    axios.post(url, studentData)
-      .then((response) => {
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error('Error: ', error);
-      }); 
+        axios.post(`http://localhost:9999/student_signup`, {studentData}).then(res => console.log('Registered Successfully', res.data))
+        .catch((error) => {
+          if (error.response) {
+            console.error('Server Error:', error.response.data);} 
+          else if (error.request) {
+            console.error('No response received from the server');} 
+          else {
+            console.error('Request Error:', error.message);
+          }
+        });
+        email_error.textContent = '';
+        password_error.textContent = '';
+    } 
   };
 
 let signCardStyle = {
@@ -83,7 +80,7 @@ let departmentDropdownStyle = {
 }
   return (
     <Layout>
-      <div className="container w-25 card border border-dark-subtle" style={signCardStyle}>
+      <form onSubmit={registerStudent} className="container w-25 card border border-dark-subtle" style={signCardStyle}>
         <div className="card-body">
             <div className='d-flex justify-content-center'>
                 <h4>Student Signup</h4>
@@ -126,10 +123,10 @@ let departmentDropdownStyle = {
               </button>
               <ul className="dropdown-menu">
                 <li><a id="cs" onClick={()=>{setDepartment(1)}} className="dropdown-item">Computer Science</a></li>
-                <li><a id="it" onClick={()=>{setDepartment(2)}} className="dropdown-item">I.T.</a></li>
+                <li><a id="it" onClick={()=>{setDepartment(5)}} className="dropdown-item">I.T.</a></li>
                 <li><a id="elect" onClick={()=>{setDepartment(4)}} className="dropdown-item">Electrical</a></li>
                 <li><a id="extc" onClick={()=>{setDepartment(3)}} className="dropdown-item">EXTC</a></li>
-                <li><a id="mech" onClick={()=>{setDepartment(5)}} className="dropdown-item">Mechanical</a></li>
+                <li><a id="mech" onClick={()=>{setDepartment(2)}} className="dropdown-item">Mechanical</a></li>
               </ul>
             </div>
             <div className='border border-secondary' style={belowSeparator}></div>
@@ -173,10 +170,10 @@ let departmentDropdownStyle = {
             </table>))}
             <div className='border border-secondary' style={belowSeparator}></div>
             <div className="d-flex justify-content-center" style={signButtonStyle}>
-                <button type="button" onClick={registerStudent} className="btn btn-outline-success">Register</button>
+                <button type="submit" className="btn btn-outline-success">Register</button>
             </div>
         </div>
-    </div>
+    </form>
     </Layout>
   )
 }
