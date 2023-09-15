@@ -1,4 +1,5 @@
 import React, {useState} from 'react'
+import axios from 'axios'
 import Layout from '../Layout'
 import {emailPattern, passwordPattern} from '../patterns/patterns'
 
@@ -22,7 +23,8 @@ export default function Stsign() {
   function calcCGPI(sgpi){
     return sgpi*10;
   }
-  const registerStudent = () => {
+  const registerStudent = (event) => {
+    event.preventDefault();
     const email_error = document.getElementById('email-error');
     if(!emailPattern.test(studentEmail)){
       email_error.textContent = 'Invalid email format!';
@@ -44,20 +46,19 @@ export default function Stsign() {
       password: studentPassword,
       department_id: department,
       semester: semester,
-      sgpi: results.map((result) => result.sgpi),
-      cgpi: results.map((result) => result.cgpi)
+      sgpi: results.map((result) => result.sgpi.toString()),
+      cgpi: results.map((result) => result.cgpi.toString())
     };
-    
-    fetch('/student_signup', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(studentData),
-    }).then((response) => response.json())
-      .then((studentData) => {console.log(studentData);
-      }).catch((error)=>{console.error('Error: ', error)});
-      
+      axios.post(`http://localhost:9999/student_signup`, {studentData}).then(res => console.log('Registered Successfully', res.data))
+      .catch((error) => {
+        if (error.response) {
+          console.error('Server Error:', error.response.data);
+        } else if (error.request) {
+          console.error('No response received from the server');
+        } else {
+          console.error('Request Error:', error.message);
+        }
+      });
   };
 
 let signCardStyle = {
@@ -81,7 +82,7 @@ let departmentDropdownStyle = {
 }
   return (
     <Layout>
-      <div className="container w-25 card border border-dark-subtle" style={signCardStyle}>
+      <form onSubmit={registerStudent} className="container w-25 card border border-dark-subtle" style={signCardStyle}>
         <div className="card-body">
             <div className='d-flex justify-content-center'>
                 <h4>Student Signup</h4>
@@ -124,10 +125,10 @@ let departmentDropdownStyle = {
               </button>
               <ul className="dropdown-menu">
                 <li><a id="cs" onClick={()=>{setDepartment(1)}} className="dropdown-item">Computer Science</a></li>
-                <li><a id="it" onClick={()=>{setDepartment(2)}} className="dropdown-item">I.T.</a></li>
+                <li><a id="it" onClick={()=>{setDepartment(5)}} className="dropdown-item">I.T.</a></li>
                 <li><a id="elect" onClick={()=>{setDepartment(4)}} className="dropdown-item">Electrical</a></li>
                 <li><a id="extc" onClick={()=>{setDepartment(3)}} className="dropdown-item">EXTC</a></li>
-                <li><a id="mech" onClick={()=>{setDepartment(5)}} className="dropdown-item">Mechanical</a></li>
+                <li><a id="mech" onClick={()=>{setDepartment(2)}} className="dropdown-item">Mechanical</a></li>
               </ul>
             </div>
             <div className='border border-secondary' style={belowSeparator}></div>
@@ -171,10 +172,10 @@ let departmentDropdownStyle = {
             </table>))}
             <div className='border border-secondary' style={belowSeparator}></div>
             <div className="d-flex justify-content-center" style={signButtonStyle}>
-                <button type="button" onClick={registerStudent} className="btn btn-outline-success">Register</button>
+                <button type="submit" className="btn btn-outline-success">Register</button>
             </div>
         </div>
-    </div>
+    </form>
     </Layout>
   )
 }
