@@ -20,45 +20,43 @@ export default function Stsign() {
     { sem: 7, sgpi: '', cgpi: '', required: false},
     { sem: 8, sgpi: '', cgpi: '', required: false},
   ]);
+  const studentData = {
+    roll_no: id,
+    email: studentEmail,
+    name: studentName,
+    password: studentPassword,
+    department_id: department,
+    semester: semester,
+    sgpi: results.map((result) => result.sgpi.toString()),
+    cgpi: results.map((result) => result.cgpi.toString())
+  };
   function calcCGPI(sgpi){
     return sgpi*10;
   }
   const registerStudent = (event) => {
     event.preventDefault();
     const email_error = document.getElementById('email-error');
+    const password_error = document.getElementById('password-error');
     if(!emailPattern.test(studentEmail)){
       email_error.textContent = 'Invalid email format!';
     }
-    else{
-      email_error.textContent = '';
-    }
-    const password_error = document.getElementById('password-error');
-    if(!passwordPattern.test(studentPassword)){
+    else if(!passwordPattern.test(studentPassword)){
       password_error.textContent = 'The password should contain uppercase letters, one special symbol, numbers and should be 8 characters long';
     }
     else{
-      password_error.textContent = '';
-    }
-    const studentData = {
-      roll_no: id,
-      email: studentEmail,
-      name: studentName,
-      password: studentPassword,
-      department_id: department,
-      semester: semester,
-      sgpi: results.map((result) => result.sgpi.toString()),
-      cgpi: results.map((result) => result.cgpi.toString())
-    };
-      axios.post(`http://localhost:9999/student_signup`, {studentData}).then(res => console.log('Registered Successfully', res.data))
-      .catch((error) => {
-        if (error.response) {
-          console.error('Server Error:', error.response.data);
-        } else if (error.request) {
-          console.error('No response received from the server');
-        } else {
-          console.error('Request Error:', error.message);
-        }
-      });
+        axios.post(`http://localhost:9999/student_signup`, {studentData}).then(res => console.log('Registered Successfully', res.data))
+        .catch((error) => {
+          if (error.response) {
+            console.error('Server Error:', error.response.data);
+          } else if (error.request) {
+            console.error('No response received from the server');
+          } else {
+            console.error('Request Error:', error.message);
+          }
+        });
+        email_error.textContent = '';
+        password_error.textContent = '';
+    } 
   };
 
 let signCardStyle = {
