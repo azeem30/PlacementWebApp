@@ -1,26 +1,48 @@
+const express = require("express");
+const cors = require("cors");
+const mysql = require("mysql2");
+
 const app = express();
-const express = require('express');
-const mysql = require('mysql')
-const cors = require('cors')
-const port = 3306;
+app.use(cors());
+app.use(express.json());
 
-// Create a MySQL connection
-const db = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: 'Itachi*0126',
-  database: 'Placement_app',
+const con = mysql.createConnection({
+  host: "localhost",
+  user: "root",
+  password: "abc123",
+  database: "placementwebapp"
 });
 
-// Connect to the database
-db.connect((err) => {
+con.connect((err) => {
   if (err) {
-    console.error('Database connection failed: ', err);
-  } else {
-    console.log('Connected to the database');
+    console.error('Error connecting to MySQL:', err);
+    return;
   }
+  console.log('Connected to MySQL');
 });
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+app.post("/student_signup", (req, res) => {
+  let data = [
+    req.body.roll_no,
+    req.body.email,
+    req.body.name,
+    req.body.password,
+    req.body.department_id,
+    req.body.semester,
+    req.body.sgpi,
+    req.body.cgpi
+  ];
+  let sql = "INSERT INTO students (roll_no, email, name, password, department_id, semester, sgpi, cgpi) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+  con.query(sql, data, (err, res) => {
+    if (err) {
+      console.error('Error inserting data into MySQL:', err);
+      res.status(500).json({ error: 'Internal Server Error' });
+    } else {
+      res.status(200).json({ message: 'Data inserted successfully' });
+    }
+  });
+});
+
+app.listen(9999, () => {
+  console.log("Ready to serve @ 9999");
 });

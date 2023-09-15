@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
 import Layout from '../Layout'
 import {emailPattern, passwordPattern} from '../patterns/patterns'
+import axios from 'axios'
 
 export default function Stsign() { 
   const [id, setId] = useState('');
@@ -22,7 +23,9 @@ export default function Stsign() {
   function calcCGPI(sgpi){
     return sgpi*10;
   }
+
   const registerStudent = () => {
+    
     const email_error = document.getElementById('email-error');
     if(!emailPattern.test(studentEmail)){
       email_error.textContent = 'Invalid email format!';
@@ -48,16 +51,15 @@ export default function Stsign() {
       cgpi: results.map((result) => result.cgpi)
     };
     
-    fetch('/student_signup', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(studentData),
-    }).then((response) => response.json())
-      .then((studentData) => {console.log(studentData);
-      }).catch((error)=>{console.error('Error: ', error)});
-      
+    const url = "http://localhost:9999/student_signup";
+
+    axios.post(url, studentData)
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error('Error: ', error);
+      }); 
   };
 
 let signCardStyle = {
