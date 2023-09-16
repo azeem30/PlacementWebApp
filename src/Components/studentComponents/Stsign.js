@@ -2,8 +2,10 @@ import React, {useState} from 'react'
 import axios from 'axios'
 import Layout from '../Layout'
 import {emailPattern, passwordPattern} from '../patterns/patterns'
+import { useNavigate } from 'react-router-dom'
 
 export default function Stsign() { 
+  const navigate = useNavigate();
   const [id, setId] = useState('');
   const [studentEmail, setStudentEmail] = useState('');
   const [studentPassword, setStudentPassword] = useState('');
@@ -47,7 +49,10 @@ export default function Stsign() {
     }
     else{
         axios.post(`http://localhost:9999/student_signup`, {studentData}).
-        then((res) => {registration_message.textContent='Registration Successful!'})
+        then((res) => {
+          registration_message.textContent='Registration Successful!';
+          useNavigate('/student_login');
+        })
         .catch((error) => {
           if (error.response) {
             setMessageClass(`text-danger`);
