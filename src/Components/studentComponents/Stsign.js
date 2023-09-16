@@ -47,7 +47,7 @@ export default function Stsign() {
     }
     else{
         axios.post(`http://localhost:9999/student_signup`, {studentData}).
-        then((res) => {registration_message.textContent='Registration Successful!'})
+        then((res) => {registration_message.textContent='Registration Successful!';})
         .catch((error) => {
           if (error.response) {
             setMessageClass(`text-danger`);
