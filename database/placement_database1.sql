@@ -19,6 +19,7 @@
 -- Table structure for table `credentials`
 --
 
+
 DROP TABLE IF EXISTS `credentials`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
@@ -32,6 +33,7 @@ CREATE TABLE `credentials` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+
 --
 -- Dumping data for table `credentials`
 --
@@ -40,6 +42,8 @@ LOCK TABLES `credentials` WRITE;
 /*!40000 ALTER TABLE `credentials` DISABLE KEYS */;
 /*!40000 ALTER TABLE `credentials` ENABLE KEYS */;
 UNLOCK TABLES;
+
+
 
 --
 -- Table structure for table `question`
@@ -105,14 +109,15 @@ LOCK TABLES `result` WRITE;
 /*!40000 ALTER TABLE `result` ENABLE KEYS */;
 UNLOCK TABLES;
 
+
 --
 -- Table structure for table `student`
 --
 
-DROP TABLE IF EXISTS `student`;
+DROP TABLE IF EXISTS `students`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `student` (
+CREATE TABLE `students` (
   `stud_id` int NOT NULL AUTO_INCREMENT,
   `stud_name` varchar(45) NOT NULL,
   `rollno` int NOT NULL,
@@ -143,6 +148,7 @@ LOCK TABLES `student` WRITE;
 /*!40000 ALTER TABLE `student` ENABLE KEYS */;
 UNLOCK TABLES;
 
+
 --
 -- Table structure for table `subject`
 --
@@ -167,10 +173,12 @@ LOCK TABLES `subject` WRITE;
 /*!40000 ALTER TABLE `subject` DISABLE KEYS */;
 /*!40000 ALTER TABLE `subject` ENABLE KEYS */;
 UNLOCK TABLES;
+ 
 
 --
 -- Table structure for table `teacher`
 --
+
 
 DROP TABLE IF EXISTS `teacher`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -202,6 +210,7 @@ LOCK TABLES `teacher` WRITE;
 /*!40000 ALTER TABLE `teacher` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

@@ -3,34 +3,41 @@ import Layout from './Layout'
 import { Link } from 'react-router-dom'
 
 export default function Choice() {
-    let choiceLeftStyle = {
-        height: '43vw', 
-        borderRight: '2px solid green',
-        backgroundImage: 'url("https://www.livemint.com/lm-img/img/2023/09/03/1600x900/School-image_1693713739461_1693713739724.jpg")',
-        backgroundSize: 'cover'
+    let linkStyle = {
+        textDecoration: 'none'
     }
-    let choiceRightStyle = {
-        height: '43vw', 
-        backgroundImage: 'url("https://images.livemint.com/img/2022/05/31/600x338/class_1654022648652_1654022654511.jpg")',
-        backgroundSize: 'cover'
+    let imageLeftStyle = {
+        borderBottom: '1px solid black',
     }
-    let choiceButtonStyle = {
-        marginTop: '45%',
-        marginLeft: '43%',
-        width: '150px'
+    let imageRightStyle = {
+        borderBottom: '1px solid black',
+        position:'relative',
+        top: '48px'
+    }
+    let cardStyle = {
+        width: '18rem',
+        marginTop: '6%',  
+    }
+    let buttonStyle = {
+        marginTop: '45px'
     }
   return (
-        <div className="d-flex justify-content-center">
-            <div class="container w-100" style={choiceLeftStyle}>
-                <div class="card-body">
-                    <button className="btn btn-success border border-white" style={choiceButtonStyle}><Link className="text-white" to="/student_signup">I am a Student</Link></button>
-                </div>
+        <Layout>
+            <div className='d-flex justify-content-center'>
+                    <div class="card border border-dark-subtle mx-3" style={cardStyle}>
+                        <img style={imageLeftStyle} src="https://img.freepik.com/free-vector/college-university-students-group-young-happy-people-standing-isolated-white-background_575670-66.jpg?w=2000" class="card-img-top" alt="..."/>
+                        <div class="d-flex justify-content-center card-body">
+                            <button class="btn btn-success"><Link to='/student_signup' className='text-white' style={linkStyle}>I am a Student</Link></button>
+                        </div>
+                    </div>
+                    <div class="card border border-dark-subtle" style={cardStyle}>
+                                <img src="https://img.freepik.com/free-vector/teacher-standing-near-blackboard-holding-stick-isolated-flat-vector-illustration-cartoon-woman-character-near-chalkboard-pointing-alphabet_74855-8600.jpg" class="card-img-top" alt="..."/>
+                                <div style={imageRightStyle}></div>
+                                <div class="d-flex justify-content-center card-body">
+                                    <button style={buttonStyle} class="btn btn-success"><Link to='/teacher_signup' className='text-white' style={linkStyle}>I am a Teacher</Link></button>
+                                </div>
+                    </div>
             </div>
-            <div class="container w-100" style={choiceRightStyle}>
-                <div class="card-body">
-                <button className="btn btn-success border border-white" style={choiceButtonStyle}><Link className='text-white' to="/teacher_signup">I am a Teacher</Link></button>
-                </div>
-            </div>
-        </div>
+        </Layout>
   )
 }
