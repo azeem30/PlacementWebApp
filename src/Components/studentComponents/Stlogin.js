@@ -1,5 +1,6 @@
 import React from 'react'
 import Layout from '../Layout'
+import { Link } from 'react-router-dom'
 export default function Stlogin() {
     let logCardStyle = {
         position: 'relative',
@@ -41,7 +42,7 @@ export default function Stlogin() {
             </div>
             <div className='border border-secondary' style={belowSeparator}></div>
             <div className='d-flex justify-content-center'>
-                <p className='fw-semibold' style={extraTextStyle}>New Student? <a className='nav-item' href='#'>Signup</a></p>
+                <p className='fw-semibold' style={extraTextStyle}>New Student? <Link className='nav-item' to='/student_signup'>Signup</Link></p>
             </div>
         </div>
     </div>
