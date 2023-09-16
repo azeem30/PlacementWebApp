@@ -5,7 +5,7 @@ import { emailPattern, passwordPattern } from '../patterns/patterns';
 export default function Tcsign() {
   const [tRoll, setTRoll] = useState('');
   const [tName, setTName] = useState('');
-  const [tDepartment, tSetDepartment] = useState('');
+  const [tDepartment, tSetDepartment] = useState(0);
   const [tMail, tSetMail] = useState('');
   const [tPassword, tSetPassword] = useState('');
   const registerTeacher = () => {
@@ -14,13 +14,18 @@ export default function Tcsign() {
     if(!emailPattern.test(tMail)){
       teacherEmailError.textContent = 'Invalid email format!'
     }
-    else {
-      teacherEmailError.textContent = "";
-    }
-    if(!passwordPattern.test(tPassword)){
+    else if(!passwordPattern.test(tPassword)){
       teacherPasswordError.textContent = 'The password should contain uppercase letters, one special symbol, numbers and should be 8 characters long'
     }
     else{
+      const teacherData = {
+        roll_no: tRoll,
+        name: tName,
+        email: tMail,
+        password: tPassword,
+        department_id: tDepartment
+      }
+      teacherEmailError.textContent = "";
       teacherPasswordError.textContent = '';
     }
   }
@@ -71,11 +76,11 @@ let signButtonStyle ={
                 {tDepartment || 'Department'}
               </button>
               <ul className="dropdown-menu">
-                <li><a id="cs" onClick={()=>{tSetDepartment('Computer Science')}} className="dropdown-item" href="#">Computer Science</a></li>
-                <li><a id="it" onClick={()=>{tSetDepartment('I.T.')}} className="dropdown-item" href="#">I.T.</a></li>
-                <li><a id="elect" onClick={()=>{tSetDepartment('Electrical')}} className="dropdown-item" href="#">Electrical</a></li>
-                <li><a id="extc" onClick={()=>{tSetDepartment('EXTC')}} className="dropdown-item" href="#">EXTC</a></li>
-                <li><a id="mech" onClick={()=>{tSetDepartment('Mechanical')}} className="dropdown-item" href="#">Mechanical</a></li>
+                <li><a id="cs" onClick={()=>{tSetDepartment(1)}} className="dropdown-item">Computer Science</a></li>
+                <li><a id="it" onClick={()=>{tSetDepartment(5)}} className="dropdown-item">I.T.</a></li>
+                <li><a id="elect" onClick={()=>{tSetDepartment(4)}} className="dropdown-item">Electrical</a></li>
+                <li><a id="extc" onClick={()=>{tSetDepartment(3)}} className="dropdown-item">EXTC</a></li>
+                <li><a id="mech" onClick={()=>{tSetDepartment(2)}} className="dropdown-item">Mechanical</a></li>
               </ul>
             </div>
             <div className='bg-secondary' style={separator}></div>
