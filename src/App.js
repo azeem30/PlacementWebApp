@@ -9,14 +9,13 @@ import Stsign from './Components/studentComponents/Stsign';
 import Tcsign from './Components/teacherComponents/Tcsign';
 import Tests from './Components/studentComponents/Tests';
 import Choice from './Components/Choice';
-import { BrowserRouter,Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 
 function App() {
   //Aptify is a temporary title
   return (
     <>  
     <Navbar title="Aptify"/>
-    <BrowserRouter>
     <Routes>
       <Route exact path="/" Component={Choice}/> 
       <Route exact path="/student_signup" Component={Stsign}/>
@@ -28,7 +27,6 @@ function App() {
       <Route exact path='/schedule_test' Component={Schtest}/>
       <Route exact path='/pending_tests' Component={Tests}/>
     </Routes>
-    </BrowserRouter>
     </>
   );
 }
