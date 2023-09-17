@@ -2,8 +2,10 @@ import React, { useState } from 'react'
 import Layout from '../Layout'
 import { emailPattern, passwordPattern } from '../patterns/patterns';
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom';
 
 export default function Tcsign() {
+  const navigate = useNavigate();
   const [tRoll, setTRoll] = useState('');
   const [tName, setTName] = useState('');
   const [tDepartment, tSetDepartment] = useState(0);
@@ -31,7 +33,11 @@ export default function Tcsign() {
     }
     else{
         axios.post(`http://localhost:9999/teacher_signup`, {teacherData}).
-        then((res) => {registration_message.textContent='Registration Successful!'})
+        then((res) => 
+        {
+          registration_message.textContent='Registration Successful!';
+          navigate('/teacher_login');
+        })
         .catch((error) => {
           if (error.response) {
             setMessageClass(`text-danger`);
