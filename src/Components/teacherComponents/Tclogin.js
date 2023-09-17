@@ -38,12 +38,12 @@ export default function Tclogin() {
             emailValidation.textContent = 'Invalid email format!'
         }
         else{
-            const loginTeachertData = {
+            const loginTeacherData = {
                 email: email,
                 password: password
             };
             try{
-                const response = await axios.post('http://localhost:9999/teacher_login', {loginTeachertData});
+                const response = await axios.post('http://localhost:9999/teacher_login', {loginTeacherData});
                 if(response.status === 200){
                    loginMessage.textContent='Login Successful!';
                    navigate('/teacher_home');
@@ -77,7 +77,7 @@ export default function Tclogin() {
                 <p class='text-danger' id='password-validation'></p>           
             </div>
             <div className="d-flex justify-content-center" style={logButtonStyle}>
-                <button type="button" class="btn btn-info  border border-primary">Login</button>
+                <button type="submit" class="btn btn-info  border border-primary">Login</button>
             </div>
             <p class={messageClass + ' d-flex justify-content-center mt-2'} id='login-message'></p>
             <div className='border border-secondary' style={belowSeparator}></div>

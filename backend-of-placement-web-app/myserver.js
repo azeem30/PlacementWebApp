@@ -8,7 +8,7 @@ app.use(express.json());
 const db = mysql2.createConnection({
     host: 'localhost',
     user: 'root',
-    password: 'abc123',
+    password: 'Azeem@123',
     database: 'placementwebapp'
 })
 app.post('/student_signup', (req, res)=>{
@@ -66,7 +66,7 @@ app.post('/student_login', (req, res)=>{
 app.post('/teacher_signup', (req, res)=>{
     try{
     const {roll_no, email, name, password, department_id} = req.body.teacherData;
-    const insertQuery = "INSERT INTO teacher (`roll_no`, `email`, `name`, `password`, `department_id`) values (?, ?, ?, ?, ?)";
+    const insertQuery = "INSERT INTO teachers (`roll_no`, `email`, `name`, `password`, `department_id`) values (?, ?, ?, ?, ?)";
     const values = [roll_no, email, name, password, department_id];
     db.query(insertQuery, values, (err, result)=>{
         if(err){
@@ -86,7 +86,7 @@ app.post('/teacher_signup', (req, res)=>{
 app.post('/teacher_login', (req, res)=>{
     try{
         const {email, password} = req.body.loginTeacherData;
-        const selectQuery = `SELECT * FROM teacher where email=?`;
+        const selectQuery = `SELECT * FROM teachers where email=?`;
         db.query(selectQuery, [email], (error, results)=>{
             if(error){
                 console.error('Error querying MySQL:', err);
