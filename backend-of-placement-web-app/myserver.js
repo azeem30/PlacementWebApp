@@ -1,8 +1,16 @@
 const express = require('express');
 const mysql2 = require('mysql2');
 const cors = require('cors');
+const session = require('express-session');
 const app = express();
 const port = 9999;
+app.use(
+    session({
+        secret: '403',
+        resave: false,
+        saveUninitialized: true
+    })
+);
 app.use(cors());
 app.use(express.json());
 const db = mysql2.createConnection({
@@ -49,6 +57,7 @@ app.post('/student_login', (req, res)=>{
                 else{
                     const studentInfo = results[0];
                     if(studentInfo.password === password){
+                        req.session.studentEmail = studentInfo.email;
                         res.status(200).json({ message: 'Authentication successful', studentInfo });
                     }
                     else{
@@ -99,7 +108,8 @@ app.post('/teacher_login', (req, res)=>{
                 else{
                     const teacherInfo = results[0];
                     if(teacherInfo.password === password){
-                        res.status(200).json({ message: 'Authentication successful', teacherInfo });
+                        req.session.teacherEmail = teacherInfo.email;
+                        res.status(200).json({teacherInfo});
                     }
                     else{
                         res.status(401).json({ error: 'Authentication failed. Invalid credentials.' });
@@ -108,6 +118,35 @@ app.post('/teacher_login', (req, res)=>{
             }
         })
     }catch (error) {
+        console.error('Error handling login request:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+app.post('/get_teacher_details', (req, res)=>{
+    try{
+        const {roll_no, email, name, password, department_id} = req.body.ti;
+        const selectQuery = `SELECT t.*, d.department_name
+        FROM teachers t
+        INNER JOIN department d ON t.department_id = d.department_id
+        WHERE t.email = ?`;
+        db.query(selectQuery,[email], (error, results)=>{
+            if(error){
+                console.error('Error querying MySQL:', err);
+                res.status(500).json({ error: 'Internal Server Error' });
+            }
+            else{
+                if(results.length === 0){
+                    res.status(401).json({ error: 'Authentication failed. Invalid credentials.' });
+                }
+                else{
+                    const teacherProfileDetails = results[0];
+                    res.status(200).json({teacherProfileDetails});
+                    console.log(teacherProfileDetails);
+                }
+            }
+        })
+    }catch(error){
         console.error('Error handling login request:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }

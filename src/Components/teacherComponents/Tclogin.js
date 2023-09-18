@@ -4,6 +4,10 @@ import { Link } from 'react-router-dom'
 import {emailPattern} from '../patterns/patterns'
 import axios from 'axios';
 import {useNavigate} from 'react-router';
+let teacherProfile;
+export function getTeacherDetails(){
+    return teacherProfile;
+}
 
 export default function Tclogin() {
     const navigate = useNavigate();
@@ -29,7 +33,6 @@ export default function Tclogin() {
         height:'0.5px',
         marginTop: '5px'
     }
-
     const loginTeacher = async (event) => {
         event.preventDefault();
         const emailValidation = document.getElementById('email-validation');
@@ -45,6 +48,7 @@ export default function Tclogin() {
             try{
                 const response = await axios.post('http://localhost:9999/teacher_login', {loginTeacherData});
                 if(response.status === 200){
+                   teacherProfile = response.data;
                    loginMessage.textContent='Login Successful!';
                    navigate('/teacher_home');
                 }

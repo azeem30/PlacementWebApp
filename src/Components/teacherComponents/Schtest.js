@@ -1,7 +1,12 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Layout from '../Layout'
+import axios from 'axios'
+import { getTeacherDetails } from './Tclogin';
 
 export default function Schtest() {
+    useEffect(()=>{
+        getTeacherProfile();
+    }, []);
     const scheduleFormStyle = {
         positon: 'relative',
         top: '6%'
@@ -27,22 +32,46 @@ export default function Schtest() {
     const topDivStyle = {
         marginRight: '30px'
     }
-    const department = 'I.T.';
-    const [testTitle, setTestTitle] = useState('');
-    const [testMarks, setTestMarks] = useState(0);
-    const [testDuration ,setTestDuration] = useState(null);
-    const [testDifficulty, setTestDifficulty] = useState('');
-    const [testSubject, setTestSubject] = useState(0);
-    const [scheduledTests, setScheduledTests] = useState([]);
+    const [testInfo, setTestInfo] = useState({
+        testTitle: '',
+        testMarks: 0,
+        testDuration: 0,
+        testDifficulty: '',
+        testSubject: ''
+    });
+    const [department, setDepartment] = useState('');
+    async function getTeacherProfile() {
+        try{
+            const teacherDetails = getTeacherDetails();
+            const ti = teacherDetails.teacherInfo;
+            const response = await axios.post('http://localhost:9999/get_teacher_details', {ti});
+            if(response.status === 200){
+                const teacherProfileInfo = response.data;
+                setDepartment(teacherProfileInfo.teacherProfileDetails.department_name);
+            }
+            else{
+                console.log('Failed to get data');
+            }
+        }catch(error)
+        {
+            if (error.response) {
+                console.error('Server responded with status:', error.response.status);
+                console.error('Response data:', error.response.data);
+            } else if (error.request) {
+                console.error('No response received:', error.request);
+            } else {
+                console.error('Error:', error.message);
+            }
+        }
+    }
     const scheduleTest = () => {    
         const testDetails = {
-                  title: testTitle,
-                  marks: testMarks,
-                  duration: testDuration,
-                  difficulty: testDifficulty,
-                  subject: testSubject,
+                  title: testInfo.testTitle,
+                  marks: testInfo.testMarks,
+                  duration: testInfo.testDuration,
+                  difficulty: testInfo.testDifficulty,
+                  subject: testInfo.testSubject,
         };
-        setScheduledTests([...scheduledTests, testDetails]);
         document.getElementById('testTitleInput').value = '';
         document.getElementById('testMarksInput').value = '';
     } 
@@ -57,19 +86,19 @@ export default function Schtest() {
                 <div className='d-flex justify-content-around' style={topDivStyle}>
                 <div className="mb-3">
                     <label for="testTitleInput" className="form-label fw-semibold">Title</label>
-                    <input type="text" onChange={(event)=>{setTestTitle(event.target.value)}} className="form-control" id="testTitleInput" style={textInputStyle}/>
+                    <input type="text" onChange={(event)=>{setTestInfo({...testInfo, testTitle: event.target.value})}} className="form-control" id="testTitleInput" style={textInputStyle}/>
                 </div>
                 <div className='mb-3'>
                     <label for="testMarksInput" className="form-label fw-semibold">Marks</label>
-                    <input type="text" onChange={(event)=>{setTestMarks(event.target.value)}} className="form-control" id="testMarksInput"/>
+                    <input type="text" onChange={(event)=>{setTestInfo({...testInfo, testMarks: event.target.value})}} className="form-control" id="testMarksInput"/>
                 </div>
                 <div className="btn-group dropdown h-25" style={durationStyle}>
                         <button type="button" className="btn btn-success border border-dark-subtle dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                                 Duration
                         </button>
                         <ul className="dropdown-menu">
-                            <li><a onClick={setTestDuration(60)} className="dropdown-item" href="#">60 minutes</a></li>
-                            <li><a onClick={setTestDuration(120)} className="dropdown-item" href="#">120 minutes</a></li>
+                            <li><a onClick={()=>{setTestInfo({...testInfo, testDuration: 60})}} className="dropdown-item" href="#">60 minutes</a></li>
+                            <li><a onClick={()=>{setTestInfo({...testInfo, testDuration: 120})}} className="dropdown-item" href="#">120 minutes</a></li>
                         </ul>
                 </div>
                 </div>
@@ -79,19 +108,19 @@ export default function Schtest() {
                             Subject
                         </button>
                         <ul className="dropdown-menu">
-                            <li><a onClick={setTestSubject(1)} id='subject_dsa' className="dropdown-item" href="#">DSA</a></li>
-                            <li><a onClick={setTestSubject(2)} id='subject_dbms' className="dropdown-item" href="#">DBMS</a></li>
-                            <li><a onClick={setTestSubject(3)} id='subject_java' className="dropdown-item" href="#">Java</a></li>
-                            <li><a onClick={setTestSubject(4)} id='subject_py' className="dropdown-item" href="#">Python</a></li>
-                            <li><a onClick={setTestSubject(5)} id='subject_os' className="dropdown-item" href="#">OS</a></li>
+                            <li><a onClick={()=>{setTestInfo({...testInfo, testSubject: 1})}} id='subject_dsa' className="dropdown-item" href="#">DSA</a></li>
+                            <li><a onClick={()=>{setTestInfo({...testInfo, testSubject: 2})}} id='subject_dbms' className="dropdown-item" href="#">DBMS</a></li>
+                            <li><a onClick={()=>{setTestInfo({...testInfo, testSubject: 4})}} id='subject_java' className="dropdown-item" href="#">Java</a></li>
+                            <li><a onClick={()=>{setTestInfo({...testInfo, testSubject: 5})}} id='subject_py' className="dropdown-item" href="#">Python</a></li>
+                            <li><a onClick={()=>{setTestInfo({...testInfo, testSubject: 3})}} id='subject_os' className="dropdown-item" href="#">OS</a></li>
                         </ul>
                     </div>
                     <div style={difficultyStyle}>
                     <ul className="list-group list-group-horizontal">
-                        <li onClick={setTestDifficulty('Easy')} className="list-group-item bg-success text-white border border-dark" id="d_simple">Simple</li>
-                        <li onClick={setTestDifficulty('Medium')} className="list-group-item bg-warning text-dark border border-dark" id="d_medium">Medium</li>
-                        <li onClick={setTestDifficulty('Hard')} className="list-group-item bg-danger text-white border border-dark" id="d_hard">Hard</li>
-                        <li onClick={setTestDifficulty('Combined')} className="list-group-item bg-dark text-white border border-dark" id="d_combined">Combined</li>
+                        <li onClick={()=>{setTestInfo({...testInfo, testDifficulty: 'Easy'})}} className="list-group-item bg-success text-white border border-dark" id="d_simple">Simple</li>
+                        <li onClick={()=>{setTestInfo({...testInfo, testDifficulty: 'Medium'})}} className="list-group-item bg-warning text-dark border border-dark" id="d_medium">Medium</li>
+                        <li onClick={()=>{setTestInfo({...testInfo, testDifficulty: 'Hard'})}} className="list-group-item bg-danger text-white border border-dark" id="d_hard">Hard</li>
+                        <li onClick={()=>{setTestInfo({...testInfo, testDifficulty: 'Combined'})}} className="list-group-item bg-dark text-white border border-dark" id="d_combined">Combined</li>
                     </ul>
                     </div>
                     <div style={departmentStyle}> 
