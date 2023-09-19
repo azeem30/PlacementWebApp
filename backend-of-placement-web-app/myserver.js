@@ -152,4 +152,24 @@ app.post('/get_teacher_details', (req, res)=>{
     }
 });
 
+app.post('/schedule_test', (req, res)=>{
+    try{
+        const {id, title, marks, duration, difficulty, subject_id, teacher_email} = req.body.testDetails;
+        const insertQuery = 'INSERT INTO tests (`id`, `title`, `marks`, `duration`, `difficulty`, `subject_id`, `teacher_email`) values (?, ?, ?, ?, ?, ?, ?)';
+        const values = [id, title, marks, duration, difficulty, subject_id, teacher_email];
+        db.query(insertQuery, values, (error, results)=>{
+            if(error){
+                console.error('Error querying MySQL:', error);
+                res.status(500).json({error: 'Internal Server Error'});
+            }
+            else{
+                res.status(200).json({message: 'Data inserted successfully!'});
+            }
+        })
+    }catch(error){
+        console.error('Error handling form submission');
+        res.status(500).json({error: 'Internal Server Error'});
+    }
+});
+
 app.listen(port, ()=>{console.log('Listening on port', port)});
