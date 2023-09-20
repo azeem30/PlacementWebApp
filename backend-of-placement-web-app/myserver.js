@@ -8,7 +8,7 @@ app.use(
     session({
         secret: '403',
         resave: false,
-        saveUninitialized: true
+        saveUninitialized: true,
     })
 );
 app.use(cors());
@@ -18,7 +18,8 @@ const db = mysql2.createConnection({
     user: 'root',
     password: 'Azeem@123',
     database: 'placementwebapp'
-})
+});
+
 app.post('/student_signup', (req, res)=>{
     try{
     const {roll_no, email, name, password, department_id, semester, sgpi, cgpi} = req.body.studentData;
@@ -57,7 +58,6 @@ app.post('/student_login', (req, res)=>{
                 else{
                     const studentInfo = results[0];
                     if(studentInfo.password === password){
-                        req.session.studentEmail = studentInfo.email;
                         res.status(200).json({ message: 'Authentication successful', studentInfo });
                     }
                     else{
@@ -108,7 +108,6 @@ app.post('/teacher_login', (req, res)=>{
                 else{
                     const teacherInfo = results[0];
                     if(teacherInfo.password === password){
-                        req.session.teacherEmail = teacherInfo.email;
                         res.status(200).json({teacherInfo});
                     }
                     else{
@@ -142,7 +141,7 @@ app.post('/get_teacher_details', (req, res)=>{
                 else{
                     const teacherProfileDetails = results[0];
                     res.status(200).json({teacherProfileDetails});
-                    console.log(teacherProfileDetails);
+                    console.log(req.session.teacherEmail);
                 }
             }
         })
@@ -160,7 +159,7 @@ app.post('/schedule_test', (req, res)=>{
         db.query(insertQuery, values, (error, results)=>{
             if(error){
                 console.error('Error querying MySQL:', error);
-                res.status(500).json({error: 'Internal Server Error'});
+                res.status(500).json({error:     'Internal Server Error'});
             }
             else{
                 res.status(200).json({message: 'Data inserted successfully!'});

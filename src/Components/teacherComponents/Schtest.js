@@ -7,6 +7,7 @@ export default function Schtest() {
     useEffect(()=>{
         getTeacherProfile();
     }, []);
+    const [teacherData, setTeacherData] = useState(null);
     const scheduleFormStyle = {
         position: 'relative',
         top: '6%'
@@ -61,7 +62,6 @@ export default function Schtest() {
                 const teacherProfileInfo = response.data;
                 setDepartment(teacherProfileInfo.teacherProfileDetails.department_name);
                 setTestInfo({...testInfo, teacherEmail: teacherProfileInfo.teacherProfileDetails.email});
-                console.log(teacherProfileInfo.teacherProfileDetails.email);
             }
             else{
                 console.log('Failed to get data');
