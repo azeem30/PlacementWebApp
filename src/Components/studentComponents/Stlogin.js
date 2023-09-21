@@ -4,7 +4,10 @@ import { Link } from 'react-router-dom'
 import {emailPattern} from '../patterns/patterns'
 import axios from 'axios';
 import {useNavigate} from 'react-router';
-
+let studentProfile;
+export function getStudentDetails(){
+    return studentProfile;
+}
 export default function Stlogin() {
     const navigate = useNavigate();
     const [email, getEmail] = useState('');
@@ -44,6 +47,7 @@ export default function Stlogin() {
             try{
                 const response = await axios.post('http://localhost:9999/student_login', {loginStudentData});
                 if(response.status === 200){
+                    studentProfile = response.data;
                    loginMessage.textContent='Login Successful!';
                    navigate('/student_home');
                 }

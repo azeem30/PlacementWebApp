@@ -122,6 +122,35 @@ app.post('/teacher_login', (req, res)=>{
     }
 });
 
+app.post('/get_student_details', (req, res)=>{
+    try{
+        const {roll_no, email, name, password, department_id, semester, sgpi, cgpi} = req.body.si;
+        const selectQuery = `SELECT s.*, d.department_name
+        FROM students s
+        INNER JOIN department d ON s.department_id = d.department_id
+        WHERE s.email = ?`;
+        db.query(selectQuery, [email], (error, results)=>{
+            if(error){
+                console.error('Error querying MySQL:', err);
+                res.status(500).json({ error: 'Internal Server Error' });
+            }
+            else{
+                if(results.length === 0){
+                    res.status(401).json({ error: 'Authentication failed. Invalid credentials.' });
+                }
+                else{
+                    const studentProfileDetails = results[0];
+                    res.status(200).json({studentProfileDetails});
+                }
+            }
+        })
+    }
+    catch(error){
+        console.error('Error handling login request:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
 app.post('/get_teacher_details', (req, res)=>{
     try{
         const {roll_no, email, name, password, department_id} = req.body.ti;
@@ -141,7 +170,6 @@ app.post('/get_teacher_details', (req, res)=>{
                 else{
                     const teacherProfileDetails = results[0];
                     res.status(200).json({teacherProfileDetails});
-                    console.log(req.session.teacherEmail);
                 }
             }
         })
@@ -170,5 +198,33 @@ app.post('/schedule_test', (req, res)=>{
         res.status(500).json({error: 'Internal Server Error'});
     }
 });
+ /*
+app.post('/get_pending_tests', (req, res)=>{
+    try{
+        const {roll_no, email, name, password, department_id} = req.body.si;
+        const selectQuery = `SELECT t.*, d.department_name
+        FROM teachers t
+        INNER JOIN department d ON t.department_id = d.department_id
+        WHERE t.email = ?`;
+        db.query(selectQuery,[email], (error, results)=>{
+            if(error){
+                console.error('Error querying MySQL:', err);
+                res.status(500).json({ error: 'Internal Server Error' });
+            }
+            else{
+                if(results.length === 0){
+                    res.status(401).json({ error: 'Authentication failed. Invalid credentials.' });
+                }
+                else{
+                    const pendingTestDetais = results;
+                    res.status(200).json({teacherProfileDetails});
+                }
+            }
+        })
+    }catch(error){
+        console.error('Error handling login request:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});*/
 
 app.listen(port, ()=>{console.log('Listening on port', port)});

@@ -1,7 +1,12 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Layout from '../Layout'
+import { getStudentDetails } from './Stlogin';
+import axios from 'axios';
 
 export default function Tests() {
+    useEffect(()=>{getStudentProfile();}, []);
+    const [sdn, setSdn] = useState('');
+    const [tests, setTests] = useState(null);
     const pendingTestsData = [
         {title: 'Title1', marks: '100', duration: '60 minutes'}, 
         {title: 'Title2', marks: '100', duration: '60 minutes'}, 
@@ -23,6 +28,51 @@ export default function Tests() {
         width: '60px',
         height: '40px',
         marginTop: '8px'
+    }
+    async function getStudentProfile(){
+        try{
+            const studentDetails = getStudentDetails();
+            const si = studentDetails.studentInfo;
+            const response = await axios.post('http://localhost:9999/get_student_details', {si});
+            if(response.status === 200){
+                const studentProfileInfo = response.data;
+                setSdn(studentProfileInfo.studentProfileDetails.department_name);
+            }
+            else{
+                console.log('Failed to get data');
+            }
+        }catch(error){
+            if (error.response) {
+                console.error('Server responded with status:', error.response.status);
+                console.error('Response data:', error.response.data);
+            } else if (error.request) {
+                console.error('No response received:', error.request);
+            } else {
+                console.error('Error:', error.message);
+            }
+        }
+    }
+    async function getPendingTests(){
+        try{
+            const studentDetails = getStudentDetails();
+            const si = studentDetails.studentInfo;
+            const response  = await axios.post('http://localhost:9999/get_pending_tests', {si});
+            if(response.status === 200){
+                
+            }
+            else{
+                console.log('Failed to get data');
+            }
+        }catch(error){
+            if (error.response) {
+                console.error('Server responded with status:', error.response.status);
+                console.error('Response data:', error.response.data);
+            } else if (error.request) {
+                console.error('No response received:', error.request);
+            } else {
+                console.error('Error:', error.message);
+            }
+        }
     }
   return (
     <Layout>
