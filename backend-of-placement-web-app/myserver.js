@@ -179,6 +179,29 @@ app.post('/get_teacher_details', (req, res)=>{
     }
 });
 
+app.post('/get_teacher_subjects', (req, res)=>{
+    const {roll_no, email, name, password, department_id} = req.body.ti;
+    const selectQuery = `SELECT DISTINCT s.subject_id, s.subject_name
+    FROM subjects s
+    JOIN teachers t ON s.department_id = t.department_id
+    WHERE t.department_id = '?';`
+    db.query(selectQuery, [department_id], (error, results)=>{
+        if(error){
+            console.error('Error querying MySQL:', err);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+        else{
+            if(results.length === 0){
+                res.status(401).json({ error: 'Authentication failed. Invalid credentials.' });
+            }
+            else{
+                const teacherSubjectsList = results;
+                res.status(200).json({teacherSubjectsList});
+            }
+        }
+    });
+});
+
 app.post('/schedule_test', (req, res)=>{
     try{
         const {id, title, marks, duration, difficulty, subject_id, teacher_email} = req.body.testDetails;
@@ -198,15 +221,20 @@ app.post('/schedule_test', (req, res)=>{
         res.status(500).json({error: 'Internal Server Error'});
     }
 });
- /*
+ 
 app.post('/get_pending_tests', (req, res)=>{
     try{
         const {roll_no, email, name, password, department_id} = req.body.si;
-        const selectQuery = `SELECT t.*, d.department_name
-        FROM teachers t
-        INNER JOIN department d ON t.department_id = d.department_id
-        WHERE t.email = ?`;
-        db.query(selectQuery,[email], (error, results)=>{
+        const selectQuery = `SELECT t.id AS test_id,
+        t.title AS test_title,
+        t.marks AS test_marks,
+        t.duration AS test_duration,
+        t.difficulty AS test_difficulty,
+        s.subject_name AS subject_name
+        FROM tests t
+        JOIN subjects s ON t.subject_id = s.subject_id
+        WHERE s.department_id = '?';`;
+        db.query(selectQuery,[department_id], (error, results)=>{
             if(error){
                 console.error('Error querying MySQL:', err);
                 res.status(500).json({ error: 'Internal Server Error' });
@@ -216,8 +244,8 @@ app.post('/get_pending_tests', (req, res)=>{
                     res.status(401).json({ error: 'Authentication failed. Invalid credentials.' });
                 }
                 else{
-                    const pendingTestDetais = results;
-                    res.status(200).json({teacherProfileDetails});
+                    const pendingTestDetails = results;
+                    res.status(200).json({pendingTestDetails});
                 }
             }
         })
@@ -225,6 +253,6 @@ app.post('/get_pending_tests', (req, res)=>{
         console.error('Error handling login request:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
-});*/
+});
 
 app.listen(port, ()=>{console.log('Listening on port', port)});

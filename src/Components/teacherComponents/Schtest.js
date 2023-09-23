@@ -7,7 +7,8 @@ export default function Schtest() {
     useEffect(()=>{
         getTeacherProfile();
     }, []);
-    const [teacherData, setTeacherData] = useState(null);
+    const [subjects, setSubjects] = useState([]);
+    const [selectedSubject, setSelectedSubject] = useState(0);
     const scheduleFormStyle = {
         position: 'relative',
         top: '6%'
@@ -68,6 +69,28 @@ export default function Schtest() {
             }
         }catch(error)
         {
+            if (error.response) {
+                console.error('Server responded with status:', error.response.status);
+                console.error('Response data:', error.response.data);
+            } else if (error.request) {
+                console.error('No response received:', error.request);
+            } else {
+                console.error('Error:', error.message);
+            }
+        }
+        try{
+            const teacherDetails = getTeacherDetails();
+            const ti = teacherDetails.teacherInfo;
+            const response = await axios.post('http://localhost:9999/get_teacher_subjects', {ti});
+            if(response.status === 200){
+                const teacherSubjects = response.data;
+                const tsl = teacherSubjects.teacherSubjectsList;
+                setSubjects(tsl);
+            }
+            else{
+                console.log(`Failed to fetch teacher's subjects`);
+            }
+        }catch(error){
             if (error.response) {
                 console.error('Server responded with status:', error.response.status);
                 console.error('Response data:', error.response.data);
@@ -142,15 +165,21 @@ export default function Schtest() {
                 </div>
                 <div className='d-flex justify-content-around' style={bottomDiv}>
                     <div className="dropdown">
-                        <button className="btn btn-outline-success text-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        {testInfo.testSubject === 1 ? 'DSA' : testInfo.testSubject === 2 ? 'DBMS' : testInfo.testSubject === 4 ? 'Java' : testInfo.testSubject === 5 ? 'Python' : testInfo.testSubject === 3 ? 'OS' : 'Subject'}
+                        <button id='subject-dropdown-button' className="btn btn-outline-success text-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        {'Subject'}
                         </button>
                         <ul className="dropdown-menu">
-                            <li><a onClick={()=>{setTestInfo({...testInfo, testSubject: 1})}} id='subject_dsa' className="dropdown-item">DSA</a></li>
-                            <li><a onClick={()=>{setTestInfo({...testInfo, testSubject: 2})}} id='subject_dbms' className="dropdown-item">DBMS</a></li>
-                            <li><a onClick={()=>{setTestInfo({...testInfo, testSubject: 4})}} id='subject_java' className="dropdown-item">Java</a></li>
-                            <li><a onClick={()=>{setTestInfo({...testInfo, testSubject: 5})}} id='subject_py' className="dropdown-item">Python</a></li>
-                            <li><a onClick={()=>{setTestInfo({...testInfo, testSubject: 3})}} id='subject_os' className="dropdown-item">OS</a></li>
+                        {subjects.map((subject, index) => (
+                            <li key={index}
+                                    onClick={() => {
+                                        setSelectedSubject(subject.subject_id);
+                                        setTestInfo({ ...testInfo, testSubject: subject.subject_id });
+                                        document.getElementById('subject-dropdown-button').textContent = subject.subject_name;
+                                    }}
+                                    className="dropdown-item">
+                                {subject.subject_name}
+                            </li>
+                        ))}
                         </ul>
                     </div>
                     <div style={difficultyStyle}>
