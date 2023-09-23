@@ -17,7 +17,8 @@ export default function Schtest() {
         height: '0.5px'
     }
     const departmentStyle ={
-       marginTop: '1px', 
+       marginTop: '-4px', 
+       marginLeft: '7px'
     }
     const difficultyStyle ={
         marginLeft: '13px'
@@ -165,7 +166,7 @@ export default function Schtest() {
                 </div>
                 <div className='d-flex justify-content-around' style={bottomDiv}>
                     <div className="dropdown">
-                        <button id='subject-dropdown-button' className="btn btn-outline-success text-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <button id='subject-dropdown-button' className="btn btn-success border border-dark-subtle dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         {'Subject'}
                         </button>
                         <ul className="dropdown-menu">
@@ -191,7 +192,7 @@ export default function Schtest() {
                     </ul>
                     </div>
                     <div style={departmentStyle}> 
-                        <p className='fs-4 fw-normal text-info-emphasis' style={departmentStyle}>Department: <p className='fst-normal text-dark d-inline text-wrap'>{department}</p></p>
+                        <p className='fs-5 fw-normal text-info-emphasis' style={departmentStyle}>Department: <span className='fw-semibold text-dark d-inline text-wrap'>{department}</span></p>
                     </div>
                 </div>
                 <div className='mt-3 bg-dark-subtle' style={separator}></div>

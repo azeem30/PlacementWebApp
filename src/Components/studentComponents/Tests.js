@@ -21,7 +21,6 @@ export default function Tests() {
     let startButtonStyle ={
         width: '60px',
         height: '40px',
-        marginTop: '8px'
     }
     async function getPendingTests(){
         try{
@@ -59,14 +58,14 @@ export default function Tests() {
                         <ol class="list-group">
                             {tests.map((test, index)=>(
                                 <div className='d-flex justify-content-evenly' key={index}>
-                                    <li className='d-flex w-75 my-1 justify-content-between text-wrap rounded-start border border-success-subtle list-group-item'>
-                                        <p>Title: <span className='fw-semibold'>{test.test_title}</span></p>
-                                        <p>Marks: <span className='fw-semibold'>{test.test_marks}</span></p>
-                                        <p>Duration: <span className='fw-semibold'>{`${test.test_duration} minutes`}</span></p>
-                                        <p>Difficulty: <span className='fw-semibold'>{test.test_difficulty}</span></p>
-                                        <p>Subject: <span className="fw-semibold">{test.subject_name}</span></p>
+                                    <li className='d-flex w-100 my-2 justify-content-between text-wrap rounded-start border border-success-subtle list-group-item'>
+                                        <p className='my-2'>Title: <span className='fw-semibold'>{test.test_title}</span></p>
+                                        <p className='my-2'>Marks: <span className='fw-semibold'>{test.test_marks}</span></p>
+                                        <p className='my-2'>Duration: <span className='fw-semibold'>{`${test.test_duration} minutes`}</span></p>
+                                        <p className='my-2'>Difficulty: <span className='fw-semibold'>{test.test_difficulty}</span></p>
+                                        <p className='my-2'>Subject: <span className="fw-semibold">{test.subject_name}</span></p>
+                                        <button className='btn btn-success' style={startButtonStyle}>Start</button>
                                     </li>
-                                    <button className='btn btn-success' style={startButtonStyle}>Start</button>
                                 </div>
                             ))}
                         </ol>
