@@ -186,7 +186,7 @@ export default function Schtest() {
                     <div style={difficultyStyle}>
                     <ul className="list-group list-group-horizontal">
                         <button onClick={()=>{setTestInfo({...testInfo, testDifficulty: 'Easy'});}} className={`list-group-item border border-dark ${testInfo.testDifficulty === 'Easy' ? 'bg-white text-success fw-semibold' : 'bg-success text-white'}`} id="d_simple">Simple</button>
-                        <button  onClick={()=>{setTestInfo({...testInfo, testDifficulty: 'Medium'});}} className={`list-group-item border border-dark ${testInfo.testDifficulty === 'Medium' ? 'bg-dark text-warning' : 'bg-warning text-dark'}`} id="d_medium">Medium</button>
+                        <button  onClick={()=>{setTestInfo({...testInfo, testDifficulty: 'Medium'});}} className={`list-group-item border border-dark ${testInfo.testDifficulty === 'Medium' ? 'bg-white text-dark fw-semibold' : 'bg-warning text-dark'}`} id="d_medium">Medium</button>
                         <button onClick={()=>{setTestInfo({...testInfo, testDifficulty: 'Hard'});}} className={`list-group-item border border-dark ${testInfo.testDifficulty === 'Hard' ? 'bg-white text-danger fw-semibold' : 'bg-danger text-white'}`} id="d_hard">Hard</button>
                         <button  onClick={()=>{setTestInfo({...testInfo, testDifficulty: 'Combined'});}} className={`list-group-item border border-dark ${testInfo.testDifficulty === 'Combined' ? 'bg-white text-dark fw-semibold' : 'bg-dark text-white'}`} id="d_combined">Combined</button>
                     </ul>
