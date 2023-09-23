@@ -9,6 +9,8 @@ export default function Schtest() {
     }, []);
     const [subjects, setSubjects] = useState([]);
     const [selectedSubject, setSelectedSubject] = useState(0);
+    const [department, setDepartment] = useState('');
+    const [messageClass, setMessageClass] = useState('text-success');
     const scheduleFormStyle = {
         position: 'relative',
         top: '6%'
@@ -43,8 +45,6 @@ export default function Schtest() {
         testSubject: 0,
         teacherEmail: ''
     });
-    const [department, setDepartment] = useState('');
-    const [messageClass, setMessageClass] = useState('text-success');
     const generateTestId = () => {
         const  chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
         const firstCharIndex = Math.floor(Math.random() * chars.length);
@@ -185,10 +185,10 @@ export default function Schtest() {
                     </div>
                     <div style={difficultyStyle}>
                     <ul className="list-group list-group-horizontal">
-                        <button onClick={()=>{setTestInfo({...testInfo, testDifficulty: 'Easy'})}} className="list-group-item bg-success text-white border border-dark" id="d_simple">Simple</button>
-                        <button onClick={()=>{setTestInfo({...testInfo, testDifficulty: 'Medium'})}} className="list-group-item bg-warning text-dark border border-dark" id="d_medium">Medium</button>
-                        <button onClick={()=>{setTestInfo({...testInfo, testDifficulty: 'Hard'})}} className="list-group-item bg-danger text-white border border-dark" id="d_hard">Hard</button>
-                        <button onClick={()=>{setTestInfo({...testInfo, testDifficulty: 'Combined'})}} className="list-group-item bg-dark text-white border border-dark" id="d_combined">Combined</button>
+                        <button onClick={()=>{setTestInfo({...testInfo, testDifficulty: 'Easy'});}} className={`list-group-item border border-dark ${testInfo.testDifficulty === 'Easy' ? 'bg-white text-success fw-semibold' : 'bg-success text-white'}`} id="d_simple">Simple</button>
+                        <button  onClick={()=>{setTestInfo({...testInfo, testDifficulty: 'Medium'});}} className={`list-group-item border border-dark ${testInfo.testDifficulty === 'Medium' ? 'bg-dark text-warning' : 'bg-warning text-dark'}`} id="d_medium">Medium</button>
+                        <button onClick={()=>{setTestInfo({...testInfo, testDifficulty: 'Hard'});}} className={`list-group-item border border-dark ${testInfo.testDifficulty === 'Hard' ? 'bg-white text-danger fw-semibold' : 'bg-danger text-white'}`} id="d_hard">Hard</button>
+                        <button  onClick={()=>{setTestInfo({...testInfo, testDifficulty: 'Combined'});}} className={`list-group-item border border-dark ${testInfo.testDifficulty === 'Combined' ? 'bg-white text-dark fw-semibold' : 'bg-dark text-white'}`} id="d_combined">Combined</button>
                     </ul>
                     </div>
                     <div style={departmentStyle}> 
