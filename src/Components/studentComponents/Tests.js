@@ -58,7 +58,7 @@ export default function Tests() {
                         <ol class="list-group">
                             {tests.map((test, index)=>(
                                 <div className='d-flex justify-content-evenly' key={index}>
-                                    <li className='d-flex w-100 my-2 justify-content-between text-wrap rounded-start border border-success-subtle list-group-item'>
+                                    <li className='d-flex w-100 my-2 justify-content-between text-wrap rounded border border-success-subtle list-group-item'>
                                         <p className='my-2'>Title: <span className='fw-semibold'>{test.test_title}</span></p>
                                         <p className='my-2'>Marks: <span className='fw-semibold'>{test.test_marks}</span></p>
                                         <p className='my-2'>Duration: <span className='fw-semibold'>{`${test.test_duration} minutes`}</span></p>
