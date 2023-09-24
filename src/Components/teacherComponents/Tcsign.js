@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import Layout from '../Layout'
+import Layout from '../commonComponents/Layout'
 import { emailPattern, passwordPattern } from '../patterns/patterns';
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom';

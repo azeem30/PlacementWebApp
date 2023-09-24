@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import Layout from '../Layout'
+import Layout from '../commonComponents/Layout'
 import axios from 'axios'
 import { getTeacherDetails } from './Tclogin';
 

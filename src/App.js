@@ -1,5 +1,5 @@
 import './App.css'; 
-import Navbar from './Components/Navbar';
+import Navbar from './Components/commonComponents/Navbar';
 import Sthome from './Components/studentComponents/Sthome';
 import Schtest from './Components/teacherComponents/Schtest';
 import Stlogin from './Components/studentComponents/Stlogin';
@@ -8,7 +8,7 @@ import TcHome from './Components/teacherComponents/TcHome';
 import Stsign from './Components/studentComponents/Stsign';
 import Tcsign from './Components/teacherComponents/Tcsign';
 import Tests from './Components/studentComponents/Tests';
-import Choice from './Components/Choice';
+import Choice from './Components/commonComponents/Choice';
 import { Routes, Route } from 'react-router-dom';
 
 function App() {
