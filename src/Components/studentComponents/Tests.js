@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react'
 import Layout from '../commonComponents/Layout'
 import { getStudentDetails } from './Stlogin';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 export default function Tests() {
     useEffect(()=>{getPendingTests();}, []);
     const [tests, setTests] = useState([]);
+    const navigate = useNavigate();
     let testListCardStyle = {
         width: '18rem'
     }
@@ -19,8 +21,12 @@ export default function Tests() {
         marginBottom: '15px'
     }
     let startButtonStyle ={
-        width: '60px',
+        width: '60px',  
         height: '40px',
+    }
+    function startTest(test){
+        const testJSON = JSON.stringify(test);
+        navigate(`/question_and_answer?data=${encodeURIComponent(testJSON)}`);
     }
     async function getPendingTests(){
         try{
@@ -64,7 +70,7 @@ export default function Tests() {
                                         <p className='my-2'>Duration: <span className='fw-semibold'>{`${test.test_duration} minutes`}</span></p>
                                         <p className='my-2'>Difficulty: <span className='fw-semibold'>{test.test_difficulty}</span></p>
                                         <p className='my-2'>Subject: <span className="fw-semibold">{test.subject_name}</span></p>
-                                        <button className='btn btn-success' style={startButtonStyle}>Start</button>
+                                        <button onClick = {()=>startTest(test)}className='btn btn-success' style={startButtonStyle}>Start</button>
                                     </li>
                                 </div>
                             ))}

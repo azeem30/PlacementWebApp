@@ -87,6 +87,7 @@ export default function Schtest() {
                 const teacherSubjects = response.data;
                 const tsl = teacherSubjects.teacherSubjectsList;
                 setSubjects(tsl);
+                console.log(tsl);
             }
             else{
                 console.log(`Failed to fetch teacher's subjects`);
