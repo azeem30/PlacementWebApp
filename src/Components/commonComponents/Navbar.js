@@ -27,14 +27,6 @@ export default function Navbar(props) {
                     <a className="nav-link text-white" href="#">Pricing</a>
                     </li>   
                 </ul>
-                <div className="nav-item dropdown" style={dropdownStyle}>
-                <a className="nav-link dropdown-toggle mx-2 text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Select</a>
-                    <ul className="dropdown-menu">
-                        <li><h6 class="dropdown-header">Where to?</h6></li>
-                        <li><a className="dropdown-item" href="#">Tests</a></li>
-                        <li><a className="dropdown-item" href="#">Results</a></li>
-                    </ul>
-                </div>
             </div>
         </div>
       </nav>

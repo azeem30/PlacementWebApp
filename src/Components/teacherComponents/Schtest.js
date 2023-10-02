@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import Layout from '../Layout'
+import Layout from '../commonComponents/Layout'
 import axios from 'axios'
 import { getTeacherDetails } from './Tclogin';
 
@@ -7,7 +7,10 @@ export default function Schtest() {
     useEffect(()=>{
         getTeacherProfile();
     }, []);
-    const [teacherData, setTeacherData] = useState(null);
+    const [subjects, setSubjects] = useState([]);
+    const [selectedSubject, setSelectedSubject] = useState(0);
+    const [department, setDepartment] = useState('');
+    const [messageClass, setMessageClass] = useState('text-success');
     const scheduleFormStyle = {
         position: 'relative',
         top: '6%'
@@ -16,7 +19,8 @@ export default function Schtest() {
         height: '0.5px'
     }
     const departmentStyle ={
-       marginTop: '1px', 
+       marginTop: '-4px', 
+       marginLeft: '7px'
     }
     const difficultyStyle ={
         marginLeft: '13px'
@@ -41,8 +45,6 @@ export default function Schtest() {
         testSubject: 0,
         teacherEmail: ''
     });
-    const [department, setDepartment] = useState('');
-    const [messageClass, setMessageClass] = useState('text-success');
     const generateTestId = () => {
         const  chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
         const firstCharIndex = Math.floor(Math.random() * chars.length);
@@ -68,6 +70,29 @@ export default function Schtest() {
             }
         }catch(error)
         {
+            if (error.response) {
+                console.error('Server responded with status:', error.response.status);
+                console.error('Response data:', error.response.data);
+            } else if (error.request) {
+                console.error('No response received:', error.request);
+            } else {
+                console.error('Error:', error.message);
+            }
+        }
+        try{
+            const teacherDetails = getTeacherDetails();
+            const ti = teacherDetails.teacherInfo;
+            const response = await axios.post('http://localhost:9999/get_teacher_subjects', {ti});
+            if(response.status === 200){
+                const teacherSubjects = response.data;
+                const tsl = teacherSubjects.teacherSubjectsList;
+                setSubjects(tsl);
+                console.log(tsl);
+            }
+            else{
+                console.log(`Failed to fetch teacher's subjects`);
+            }
+        }catch(error){
             if (error.response) {
                 console.error('Server responded with status:', error.response.status);
                 console.error('Response data:', error.response.data);
@@ -142,27 +167,33 @@ export default function Schtest() {
                 </div>
                 <div className='d-flex justify-content-around' style={bottomDiv}>
                     <div className="dropdown">
-                        <button className="btn btn-outline-success text-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        {testInfo.testSubject === 1 ? 'DSA' : testInfo.testSubject === 2 ? 'DBMS' : testInfo.testSubject === 4 ? 'Java' : testInfo.testSubject === 5 ? 'Python' : testInfo.testSubject === 3 ? 'OS' : 'Subject'}
+                        <button id='subject-dropdown-button' className="btn btn-success border border-dark-subtle dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        {'Subject'}
                         </button>
                         <ul className="dropdown-menu">
-                            <li><a onClick={()=>{setTestInfo({...testInfo, testSubject: 1})}} id='subject_dsa' className="dropdown-item">DSA</a></li>
-                            <li><a onClick={()=>{setTestInfo({...testInfo, testSubject: 2})}} id='subject_dbms' className="dropdown-item">DBMS</a></li>
-                            <li><a onClick={()=>{setTestInfo({...testInfo, testSubject: 4})}} id='subject_java' className="dropdown-item">Java</a></li>
-                            <li><a onClick={()=>{setTestInfo({...testInfo, testSubject: 5})}} id='subject_py' className="dropdown-item">Python</a></li>
-                            <li><a onClick={()=>{setTestInfo({...testInfo, testSubject: 3})}} id='subject_os' className="dropdown-item">OS</a></li>
+                        {subjects.map((subject, index) => (
+                            <li key={index}
+                                    onClick={() => {
+                                        setSelectedSubject(subject.subject_id);
+                                        setTestInfo({ ...testInfo, testSubject: subject.subject_id });
+                                        document.getElementById('subject-dropdown-button').textContent = subject.subject_name;
+                                    }}
+                                    className="dropdown-item">
+                                {subject.subject_name}
+                            </li>
+                        ))}
                         </ul>
                     </div>
                     <div style={difficultyStyle}>
                     <ul className="list-group list-group-horizontal">
-                        <button onClick={()=>{setTestInfo({...testInfo, testDifficulty: 'Easy'})}} className="list-group-item bg-success text-white border border-dark" id="d_simple">Simple</button>
-                        <button onClick={()=>{setTestInfo({...testInfo, testDifficulty: 'Medium'})}} className="list-group-item bg-warning text-dark border border-dark" id="d_medium">Medium</button>
-                        <button onClick={()=>{setTestInfo({...testInfo, testDifficulty: 'Hard'})}} className="list-group-item bg-danger text-white border border-dark" id="d_hard">Hard</button>
-                        <button onClick={()=>{setTestInfo({...testInfo, testDifficulty: 'Combined'})}} className="list-group-item bg-dark text-white border border-dark" id="d_combined">Combined</button>
+                        <button onClick={()=>{setTestInfo({...testInfo, testDifficulty: 'Easy'});}} className={`list-group-item border border-dark ${testInfo.testDifficulty === 'Easy' ? 'bg-white text-success fw-semibold' : 'bg-success text-white'}`} id="d_simple">Simple</button>
+                        <button  onClick={()=>{setTestInfo({...testInfo, testDifficulty: 'Medium'});}} className={`list-group-item border border-dark ${testInfo.testDifficulty === 'Medium' ? 'bg-white text-dark fw-semibold' : 'bg-warning text-dark'}`} id="d_medium">Medium</button>
+                        <button onClick={()=>{setTestInfo({...testInfo, testDifficulty: 'Hard'});}} className={`list-group-item border border-dark ${testInfo.testDifficulty === 'Hard' ? 'bg-white text-danger fw-semibold' : 'bg-danger text-white'}`} id="d_hard">Hard</button>
+                        <button  onClick={()=>{setTestInfo({...testInfo, testDifficulty: 'Combined'});}} className={`list-group-item border border-dark ${testInfo.testDifficulty === 'Combined' ? 'bg-white text-dark fw-semibold' : 'bg-dark text-white'}`} id="d_combined">Combined</button>
                     </ul>
                     </div>
                     <div style={departmentStyle}> 
-                        <p className='fs-4 fw-normal text-info-emphasis' style={departmentStyle}>Department: <p className='fst-normal text-dark d-inline text-wrap'>{department}</p></p>
+                        <p className='fs-5 fw-normal text-info-emphasis' style={departmentStyle}>Department: <span className='fw-semibold text-dark d-inline text-wrap'>{department}</span></p>
                     </div>
                 </div>
                 <div className='mt-3 bg-dark-subtle' style={separator}></div>

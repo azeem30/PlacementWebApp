@@ -1,5 +1,5 @@
 import React from 'react'
-import Layout from '../Layout';
+import Layout from '../commonComponents/Layout';
 import { Link } from 'react-router-dom';
 
 export default function Sthome() {

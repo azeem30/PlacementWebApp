@@ -24,10 +24,21 @@ app.post('/student_signup', (req, res)=>{
     try{
     const {roll_no, email, name, password, department_id, semester, sgpi, cgpi} = req.body.studentData;
     const insertQuery = "INSERT INTO students (`roll_no`, `email`, `name`, `password`, `department_id`, `semester`, `sgpi`, `cgpi`) values (?, ?, ?, ?, ?, ?, ?, ?)";
+    const aptitudeAccessQuery = "INSERT INTO subject_access (`user_id`, `subject_id`) values (?, ?)";
     const sgpiJSON = JSON.stringify(sgpi);
     const cgpiJSON = JSON.stringify(cgpi);
     const values = [roll_no, email, name, password, department_id, semester, sgpiJSON, cgpiJSON];
+    const aptitudeAccessValues = [email, 40];
     db.query(insertQuery, values, (err, result)=>{
+        if(err){
+            console.error('Error inserting data into MySQL:', err);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+        else{
+            res.status(200).json({ message: 'Data inserted successfully'});
+        }
+    });
+    db.query(aptitudeAccessQuery, aptitudeAccessValues, (err, result)=>{
         if(err){
             console.error('Error inserting data into MySQL:', err);
             res.status(500).json({ error: 'Internal Server Error' });
@@ -76,8 +87,19 @@ app.post('/teacher_signup', (req, res)=>{
     try{
     const {roll_no, email, name, password, department_id} = req.body.teacherData;
     const insertQuery = "INSERT INTO teachers (`roll_no`, `email`, `name`, `password`, `department_id`) values (?, ?, ?, ?, ?)";
+    const aptitudeAccessQuery = "INSERT INTO subject_access (`user_id`, `subject_id`) values (?, ?)";
     const values = [roll_no, email, name, password, department_id];
+    const aptitudeAccessValues = [email, 40];
     db.query(insertQuery, values, (err, result)=>{
+        if(err){
+            console.error('Error inserting data into MySQL:', err);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+        else{
+            res.status(200).json({ message: 'Data inserted successfully'});
+        }
+    });
+    db.query(aptitudeAccessQuery, aptitudeAccessValues, (err, result)=>{
         if(err){
             console.error('Error inserting data into MySQL:', err);
             res.status(500).json({ error: 'Internal Server Error' });
@@ -179,6 +201,33 @@ app.post('/get_teacher_details', (req, res)=>{
     }
 });
 
+app.post('/get_teacher_subjects', (req, res)=>{
+    const {roll_no, email, name, password, department_id} = req.body.ti;
+    const selectQuery = `SELECT subject_id, subject_name from (SELECT s.subject_id, s.subject_name
+    FROM subjects s 
+    WHERE s.department_id = ? 
+    UNION SELECT sa.subject_id, s.subject_name
+    FROM subject_access sa
+    JOIN subjects s ON sa.subject_id = s.subject_id
+    JOIN teachers t ON sa.user_id = t.email
+    WHERE t.email = ? AND t.department_id = ?) as combined_subjects;`
+    db.query(selectQuery, [department_id, email, department_id], (error, results)=>{
+        if(error){
+            console.error('Error querying MySQL:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+        else{
+            if(results.length === 0){
+                res.status(401).json({ error: 'Authentication failed. Invalid credentials.' });
+            }
+            else{
+                const teacherSubjectsList = results;
+                res.status(200).json({teacherSubjectsList});
+            }
+        }
+    });
+});
+
 app.post('/schedule_test', (req, res)=>{
     try{
         const {id, title, marks, duration, difficulty, subject_id, teacher_email} = req.body.testDetails;
@@ -198,17 +247,34 @@ app.post('/schedule_test', (req, res)=>{
         res.status(500).json({error: 'Internal Server Error'});
     }
 });
- /*
+ 
 app.post('/get_pending_tests', (req, res)=>{
     try{
         const {roll_no, email, name, password, department_id} = req.body.si;
-        const selectQuery = `SELECT t.*, d.department_name
-        FROM teachers t
-        INNER JOIN department d ON t.department_id = d.department_id
-        WHERE t.email = ?`;
-        db.query(selectQuery,[email], (error, results)=>{
+        const selectQuery = `SELECT t.id AS test_id,
+        t.title AS test_title,
+        t.marks AS test_marks,
+        t.duration AS test_duration,
+        t.difficulty AS test_difficulty,
+        s.subject_name AS subject_name
+        FROM tests t
+        JOIN subjects s ON t.subject_id = s.subject_id
+        JOIN students stu ON s.department_id = stu.department_id
+        WHERE stu.department_id = ?
+        UNION 
+        SELECT t.id AS test_id,
+        t.title AS test_title,
+        t.marks AS test_marks,
+        t.duration AS test_duration,
+        t.difficulty AS test_difficulty,
+        s.subject_name AS subject_name
+        FROM tests t
+        JOIN subjects s ON t.subject_id = s.subject_id
+        JOIN subject_access sa ON t.subject_id = sa.subject_id
+        WHERE sa.user_id = ?`;
+        db.query(selectQuery,[department_id, email], (error, results)=>{
             if(error){
-                console.error('Error querying MySQL:', err);
+                console.error('Error querying MySQL:', error);
                 res.status(500).json({ error: 'Internal Server Error' });
             }
             else{
@@ -216,8 +282,8 @@ app.post('/get_pending_tests', (req, res)=>{
                     res.status(401).json({ error: 'Authentication failed. Invalid credentials.' });
                 }
                 else{
-                    const pendingTestDetais = results;
-                    res.status(200).json({teacherProfileDetails});
+                    const pendingTestDetails = results;
+                    res.status(200).json({pendingTestDetails});
                 }
             }
         })
@@ -225,6 +291,31 @@ app.post('/get_pending_tests', (req, res)=>{
         console.error('Error handling login request:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
-});*/
+});
+
+app.post('/questions', (req, res)=>{
+    try{
+        const {test_id, test_title, test_marks, test_duration, test_difficulty, subject_name} = req.body.test;
+        const selectQuery = `SELECT * FROM questions_dataset WHERE question_difficulty=? AND subject_name=?`;
+        const values=[test_difficulty, subject_name];
+        db.query(selectQuery, values, (error, results)=>{
+            if(error){
+                console.error('Error querying MySQL:', error);
+                res.status(500).json({ error: 'Internal Server Error' });
+            }
+            else{
+                if(results.length === 0){
+                    res.status(401).json({ error: 'No match found' });
+                }
+                else{
+                    const questions = results;
+                    res.status(200).json({questions});
+                }
+            }
+        })
+    }catch(error){
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
 
 app.listen(port, ()=>{console.log('Listening on port', port)});

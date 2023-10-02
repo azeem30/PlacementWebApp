@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import Layout from '../Layout'
+import Layout from '../commonComponents/Layout'
 import { Link } from 'react-router-dom'
 import {emailPattern} from '../patterns/patterns'
 import axios from 'axios';

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom';
-import Layout from '../Layout';
+import Layout from '../commonComponents/Layout';
 
 export default function TcHome() {
     let imageStyle = {

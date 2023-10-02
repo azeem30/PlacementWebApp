@@ -1,5 +1,5 @@
 import './App.css'; 
-import Navbar from './Components/Navbar';
+import Navbar from './Components/commonComponents/Navbar';
 import Sthome from './Components/studentComponents/Sthome';
 import Schtest from './Components/teacherComponents/Schtest';
 import Stlogin from './Components/studentComponents/Stlogin';
@@ -8,8 +8,9 @@ import TcHome from './Components/teacherComponents/TcHome';
 import Stsign from './Components/studentComponents/Stsign';
 import Tcsign from './Components/teacherComponents/Tcsign';
 import Tests from './Components/studentComponents/Tests';
-import Choice from './Components/Choice';
+import Choice from './Components/commonComponents/Choice';
 import { Routes, Route } from 'react-router-dom';
+import Questions from './Components/studentComponents/Questions';
 
 function App() {
   //Aptify is a temporary title
@@ -26,6 +27,7 @@ function App() {
       <Route exact path="/teacher_home" Component={TcHome}/>
       <Route exact path='/schedule_test' Component={Schtest}/>
       <Route exact path='/pending_tests' Component={Tests}/>
+      <Route exact path='/question_and_answer' Component={Questions}/>
     </Routes>
     </>
   );
