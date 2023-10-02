@@ -9,7 +9,10 @@ export default function Questions() {
   const testJSON = queryParams.get('data');
   const test = JSON.parse(decodeURIComponent(testJSON));
   const [fetchedQuestions, setFetchedQuestions] = useState([]);
-  useEffect(()=>{fetchQuestions();}, []);
+  const [randomizedQuestions, setRandomizedQuestions] = useState([]);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [userSelectedOptions, setUserSelectedOptions] = useState([]);
+  useEffect(()=>{fetchQuestions();},[]);
   let placingContainer = {
     position: 'absolute',
     top: '20%',
@@ -30,12 +33,60 @@ export default function Questions() {
   let detailStyle = {
     marginTop: '12px'
   }
+  const shuffleArray = (questionArray) =>{
+    const shuffledArray = [...questionArray];
+    for(let i=shuffledArray.length - 1; i>0; i--){
+      const j = Math.floor(Math.random() * (i+1));
+      [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+    }
+    return shuffledArray;
+  }
+  const handleOptionSelect = (optionIndex) => {
+    const updatedSelectedOptions = [...userSelectedOptions];
+    updatedSelectedOptions[currentQuestionIndex] = optionIndex;
+    setUserSelectedOptions(updatedSelectedOptions);
+  }
+  const handleNextQuestion = () => {
+    if(currentQuestionIndex < fetchedQuestions.length - 1){
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+    }
+  }
+  const handlePreviousQuestion = () => {
+    if(currentQuestionIndex > 0){
+      setCurrentQuestionIndex(currentQuestionIndex - 1);
+    }
+  }
+  const renderOptions = (question) => {
+    const options = [];
+    for(let i = 1; i<=4; i++){
+      const optionKey = `option${i}`;
+      const optionText = question[optionKey];
+      options.push(
+        <li className="list-group-item" key={optionKey}>
+        <input
+          className="form-check-input me-1"
+          type="radio"
+          name={`question-${currentQuestionIndex}`}
+          value={optionKey}
+          id={`option-${optionKey}`}
+          checked={optionKey === userSelectedOptions[currentQuestionIndex]}
+          onChange={() => handleOptionSelect(optionKey)}
+        />
+        <label className="form-check-label text-wrap" htmlFor={`option-${optionKey}`}>{optionText}</label>
+      </li>
+      );
+    }
+  }
   async function fetchQuestions(){
     try{
-      console.log(test);
       const response = await axios.post('http://localhost:9999/questions', {test});
       if(response.status===200){
-        console.log(response.data.questions);
+        const questions = response.data.questions;
+        const shuffledQuestions = shuffleArray(questions);
+        setFetchedQuestions(questions);
+        setRandomizedQuestions(shuffledQuestions);
+        setUserSelectedOptions(new Array(questions.length).fill(''));
+        console.log(shuffledQuestions);
       }
       else{
         console.log('Failed to get data');
@@ -65,32 +116,17 @@ export default function Questions() {
       </div>
       <div className="container bg-info-subtle rounded border border-primary-subtle" style={placingContainer}>
         <div className='mx-1 my-2'>
-          <p className='fw-semibold text-wrap w-100'>Question</p>
+          <p className='fw-semibold text-wrap w-100'>{/*randomizedQuestions[currentQuestionIndex].question_text*/}</p>
         </div>
         <div className='border border-warning-subtle'>
           <ul className="list-group">
-              <li className="list-group-item">
-                  <input className="form-check-input me-1" type="radio" name="listGroupRadio" value="" id="firstRadio" />
-                  <label className="form-check-label text-wrap" for="firstRadio">Option 1</label>
-              </li>
-              <li className="list-group-item">
-                  <input className="form-check-input me-1" type="radio" name="listGroupRadio" value="" id="secondRadio" />
-                  <label className="form-check-label text-wrap" for="secondRadio">Option 2</label>
-              </li>
-              <li className="list-group-item">
-                  <input className="form-check-input me-1" type="radio" name="listGroupRadio" value="" id="thirdRadio" />
-                  <label className="form-check-label text-wrap" for="thirdRadio">Option 3</label>
-              </li>
-              <li className="list-group-item">
-                  <input className="form-check-input me-1" type="radio" name="listGroupRadio" value="" id="fourthRadio" />
-                  <label className="form-check-label text-wrap" for="fourthRadio">Option 4</label>
-              </li>
+              {/*renderOptions(randomizedQuestions[currentQuestionIndex])*/}
           </ul>
         </div>
         <div className='d-flex justify-content-around'>
-              <button className='btn btn-primary border border-dark my-2'>Previous</button>
+              <button className='btn btn-primary border border-dark my-2' onClick={handlePreviousQuestion}>Previous</button>
               <div className='badge text-bg-danger fw-normal text-wrap display-6 border border-dark' style={timerStyle}>0:00</div>
-              <button className='btn btn-primary border border-dark my-2'>Next</button>
+              <button className='btn btn-primary border border-dark my-2' onClick={handleNextQuestion}>Next</button>
           </div>
       </div>
     </Layout>
