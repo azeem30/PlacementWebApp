@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useLocation} from 'react-router-dom'
 import Layout from '../commonComponents/Layout'
 import axios from 'axios';
+import CountdownTimer from './timer';
 
 export default function Questions() {
   const location = useLocation();
@@ -125,7 +126,7 @@ export default function Questions() {
         </div>
         <div className='d-flex justify-content-around'>
               <button className='btn btn-primary border border-dark my-2' onClick={handlePreviousQuestion}>Previous</button>
-              <div className='badge text-bg-danger fw-normal text-wrap display-6 border border-dark' style={timerStyle}>0:00</div>
+              <CountdownTimer initialTime={120} /> 
               <button className='btn btn-primary border border-dark my-2' onClick={handleNextQuestion}>Next</button>
           </div>
       </div>
