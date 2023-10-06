@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from 'react';
 
-function CountdownTimer() {
-  const [timeInSeconds, setTimeInSeconds] = useState(120);
-
+function CountdownTimer(props) {
+  const [timeInSeconds, setTimeInSeconds] = useState(props.initialTime);
+  let timerStyle = {
+    width: '70px',
+    height:'30px',
+    fontSize: '16px',
+    marginTop: '10px'
+  }
   useEffect(() => {
     const timerInterval = setInterval(() => {
       if (timeInSeconds > 0) {
@@ -20,7 +25,7 @@ function CountdownTimer() {
   const formattedTime = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
 
   return (
-    <div className='badge text-bg-danger fw-normal text-wrap display-6 border border-dark'>
+    <div style={timerStyle} className='badge text-bg-danger fw-normal text-wrap display-6 border border-dark'>
       {formattedTime}
     </div>
   );

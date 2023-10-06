@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 export default function Navbar(props) {
   let navStyle = {
@@ -18,7 +19,7 @@ export default function Navbar(props) {
             <div className="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul className="navbar-nav">
                     <li className="nav-item">
-                    <a className="nav-link active text-white" aria-current="page" href="#">Home</a>
+                    <Link className="nav-link active text-white" aria-current="page" to='/'>Home</Link>
                     </li>
                     <li className="nav-item mx-2">
                     <a className="nav-link text-white" href="#">About</a>
