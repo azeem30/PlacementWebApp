@@ -13,7 +13,7 @@ export default function Questions() {
   const [fetchedQuestions, setFetchedQuestions] = useState([]);
   const [randomizedQuestions, setRandomizedQuestions] = useState([]);
   const [userSelectedOptions, setUserSelectedOptions] = useState([]);
-  
+  const [questionNumber, setQuestionNumber] = useState(1);
   useEffect(()=>{
     const fetchQuestions = async () => {
       try{
@@ -42,6 +42,17 @@ export default function Questions() {
     }
     fetchQuestions();
   },[]);
+  useEffect(() => {
+    function preventRightClick(event) {
+      if (event.button === 2) {
+        event.preventDefault();
+      }
+    }
+    window.addEventListener('contextmenu', preventRightClick);
+    return () => {
+      window.removeEventListener('contextmenu', preventRightClick);
+    };
+  }, []);
   let placingContainer = {
     position: 'absolute',
     top: '20%',
@@ -49,14 +60,9 @@ export default function Questions() {
     width: '60%',
     minHeigh: '300px',
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
+    userSelect: 'none'
   }  
-  let timerStyle = {
-    width: '70px',
-    height:'30px',
-    fontSize: '16px',
-    marginTop: '10px'
-  }
   let detailContainer = {
     height: '50px',
     width: '100%',
@@ -81,36 +87,15 @@ export default function Questions() {
   const handleNextQuestion = () => {
     if(currentQuestionIndex < fetchedQuestions.length - 1){
       setCurrentQuestionIndex(currentQuestionIndex+1);
+      setQuestionNumber(questionNumber + 1);
     }
   }
   const handlePreviousQuestion = () => {
     if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex(currentQuestionIndex-1);
+      setQuestionNumber(questionNumber - 1);
     }
   }
-  /*
-  const renderOptions = (question) => {
-    const options = [];
-    for(let i = 1; i<=4; i++){
-      const optionKey = `option${i}`;
-      const optionValue = question[optionKey];
-      options.push(
-        <li className="list-group-item" key={optionKey}>
-        <input
-          className="form-check-input me-1"
-          type="radio"
-          name={`question-${currentQuestionIndex}`}
-          value={optionKey}
-          id={`option-${optionKey}`}
-          checked={optionKey === userSelectedOptionsRef.current[currentQuestionIndex]}
-          onChange={() => handleOptionSelect(optionKey)}
-        />
-        <label className="form-check-label text-wrap" htmlFor={`option-${optionKey}`}>{optionValue}</label>
-      </li>
-      );
-    }
-    return options;
-  }*/
   return (
     <Layout>
       <div style={detailContainer} className='bg-warning-subtle border-bottom border-warning'>
@@ -124,7 +109,7 @@ export default function Questions() {
       </div>
       <div className="container bg-info-subtle rounded border border-primary-subtle" style={placingContainer}>
         <div className='mx-1 my-2'>
-          <p className='fw-semibold text-wrap w-100'>{randomizedQuestions[currentQuestionIndex]?.question_text} <span className={randomizedQuestions[currentQuestionIndex]?.question_difficulty==='Easy'? 'text-success' : randomizedQuestions[currentQuestionIndex]?.question_difficulty === 'Medium' ? 'text-warning' : 'text-danger'}>{randomizedQuestions[currentQuestionIndex]?.question_difficulty}</span></p>
+          <p className='fw-semibold d-flex justify-content-between text-wrap w-100'>{`${questionNumber}. ${randomizedQuestions[currentQuestionIndex]?.question_text}`} <span className={randomizedQuestions[currentQuestionIndex]?.question_difficulty==='Easy'? 'text-success' : randomizedQuestions[currentQuestionIndex]?.question_difficulty === 'Medium' ? 'text-warning' : 'text-danger'}>{randomizedQuestions[currentQuestionIndex]?.question_difficulty}</span></p>
         </div>
         <div className='border border-warning-subtle'>
           <ul className="list-group">
@@ -148,7 +133,7 @@ export default function Questions() {
         </div>
         <div className='d-flex justify-content-around'>
               <button className='btn btn-primary border border-dark my-2' onClick={handlePreviousQuestion}>Previous</button>
-              <CountdownTimer initialTime={120} /> 
+              <CountdownTimer initialTime={test.test_duration * 60} /> 
               <button className='btn btn-primary border border-dark my-2' onClick={handleNextQuestion}>Next</button>
           </div>
       </div>

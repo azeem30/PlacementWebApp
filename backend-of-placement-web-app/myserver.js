@@ -296,6 +296,26 @@ app.post('/get_pending_tests', (req, res)=>{
 app.post('/questions', (req, res)=>{
     try{
         const {test_id, test_title, test_marks, test_duration, test_difficulty, subject_name} = req.body.test;
+        if(test_difficulty==='Combined'){
+        const selectQuery = `SELECT * FROM questions_dataset WHERE subject_name=?`;
+        const values=[subject_name];
+        db.query(selectQuery, values, (error, results)=>{
+            if(error){
+                console.error('Error querying MySQL:', error);
+                res.status(500).json({ error: 'Internal Server Error' });
+            }
+            else{
+                if(results.length === 0){
+                    res.status(401).json({ error: 'No match found' });
+                }
+                else{
+                    const questions = results;
+                    res.status(200).json({questions});
+                }
+            }
+        });
+        }
+        else{
         const selectQuery = `SELECT * FROM questions_dataset WHERE question_difficulty=? AND subject_name=?`;
         const values=[test_difficulty, subject_name];
         db.query(selectQuery, values, (error, results)=>{
@@ -312,7 +332,8 @@ app.post('/questions', (req, res)=>{
                     res.status(200).json({questions});
                 }
             }
-        })
+        });
+    }
     }catch(error){
         res.status(500).json({ error: 'Internal Server Error' });
     }
