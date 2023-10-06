@@ -124,7 +124,7 @@ export default function Questions() {
       </div>
       <div className="container bg-info-subtle rounded border border-primary-subtle" style={placingContainer}>
         <div className='mx-1 my-2'>
-          <p className='fw-semibold text-wrap w-100'>{randomizedQuestions[currentQuestionIndex]?.question_text}</p>
+          <p className='fw-semibold text-wrap w-100'>{randomizedQuestions[currentQuestionIndex]?.question_text} <span className={randomizedQuestions[currentQuestionIndex]?.question_difficulty==='Easy'? 'text-success' : randomizedQuestions[currentQuestionIndex]?.question_difficulty === 'Medium' ? 'text-warning' : 'text-danger'}>{randomizedQuestions[currentQuestionIndex]?.question_difficulty}</span></p>
         </div>
         <div className='border border-warning-subtle'>
           <ul className="list-group">
