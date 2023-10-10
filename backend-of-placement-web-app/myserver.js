@@ -6,7 +6,7 @@ const app = express();
 const port = 9999;
 app.use(
     session({
-        secret: '403',
+        secret: `It's a secret`,
         resave: false,
         saveUninitialized: true,
     })
