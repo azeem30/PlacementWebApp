@@ -1,8 +1,9 @@
-import React, { useEffect, useState, useRef } from 'react'
-import { useLocation} from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import Layout from '../commonComponents/Layout'
 import axios from 'axios';
 import CountdownTimer from './timer';
+import { getStudentDetails } from './Stlogin'
 
 export default function Questions() {
   const location = useLocation();
@@ -23,7 +24,7 @@ export default function Questions() {
           const shuffledQuestions = shuffleArray(questions);
           setFetchedQuestions(questions);
           setRandomizedQuestions(shuffledQuestions);
-          setUserSelectedOptions(new Array(fetchedQuestions.length).fill(''));
+          setUserSelectedOptions(new Array(fetchedQuestions.length).fill({question_id: null, question_text: '', option_key: '', selected_option: ''}));
         }
         else{
           console.log('Failed to get data');
@@ -42,7 +43,18 @@ export default function Questions() {
     }
     fetchQuestions();
   },[]);
-  useEffect(() => {
+  const submitResponse = () => {
+    const studentDetails = getStudentDetails();
+    const si = studentDetails.studentInfo;
+    const testResponse = {
+      response_id: test.test_id,
+      response_data: userSelectedOptions,
+      student_id: si.roll_no,
+      teacher_id: test.teacher_email
+    }
+    //further implementation from here
+  }
+  /*useEffect(() => {
     function preventRightClick(event) {
       if (event.button === 2) {
         event.preventDefault();
@@ -52,7 +64,7 @@ export default function Questions() {
     return () => {
       window.removeEventListener('contextmenu', preventRightClick);
     };
-  }, []);
+  }, []);*/
   let placingContainer = {
     position: 'absolute',
     top: '20%',
@@ -78,9 +90,14 @@ export default function Questions() {
     }
     return shuffledArray;
   }
-  const handleOptionSelect = (optionIndex) => {
+  const handleOptionSelect = (questionId,questionText, optionIndex, optionText) => {
     const updatedSelectedOptions = [...userSelectedOptions];
-    updatedSelectedOptions[currentQuestionIndex] = optionIndex;
+    updatedSelectedOptions[currentQuestionIndex] = {
+      questionId,
+      questionText,
+      optionIndex,
+      selectedOption: optionText
+    }
     setUserSelectedOptions(updatedSelectedOptions);
     console.log(userSelectedOptions);
   }
@@ -121,8 +138,13 @@ export default function Questions() {
                 name={`question-${currentQuestionIndex}`}
                 value={optionKey}
                 id={`option-${optionKey}`}
-                checked={optionKey === userSelectedOptions[currentQuestionIndex]}
-                onChange={() => handleOptionSelect(optionKey)}
+                checked={optionKey === userSelectedOptions[currentQuestionIndex]?.option_key}
+                onChange={() => {
+                  const questionId = randomizedQuestions[currentQuestionIndex].question_id;
+                  const questionText = randomizedQuestions[currentQuestionIndex].question_text;
+                  const optionText = randomizedQuestions[currentQuestionIndex][optionKey];
+                  handleOptionSelect(questionId,questionText, optionKey, optionText);
+                 }}
               />
               <label className="form-check-label text-wrap" htmlFor={`option-${optionKey}`}>
                 {randomizedQuestions[currentQuestionIndex]?.[optionKey]}
@@ -135,6 +157,7 @@ export default function Questions() {
               <button className='btn btn-primary border border-dark my-2' onClick={handlePreviousQuestion}>Previous</button>
               <CountdownTimer initialTime={test.test_duration * 60} /> 
               <button className='btn btn-primary border border-dark my-2' onClick={handleNextQuestion}>Next</button>
+              <button disabled={!(currentQuestionIndex === randomizedQuestions.length -1)} onClick={submitResponse} className="btn btn-success border border-dark my-2">Submit</button>
           </div>
       </div>
     </Layout>
