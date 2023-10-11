@@ -341,4 +341,24 @@ app.post('/questions', (req, res)=>{
     }
 });
 
+app.post('/submit_response', (req, res)=>{
+    try{
+        const {response_id, response_data, marks_scored, total_marks, percentage, student_id, teacher_id} = req.body.testResponse;
+        const insertQuery = `INSERT INTO test_responses (id, data, marks_scored, total_marks, percentage, student_id, teacher_id)
+        values (?, ?, ?, ?, ?, ?, ?);`
+        const values = [response_id, JSON.stringify(response_data), marks_scored, total_marks, percentage, student_id, teacher_id];
+        db.query(insertQuery, values, (error, results)=>{
+            if(error){
+                console.error('Error querying MySQL:', error);
+                res.status(500).json({ error: 'Internal Server Error' });
+            }
+            else{
+                res.status(200).json({ message: 'Response submitted successfully!'});
+            }
+        })
+    }catch(error){
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
 app.listen(port, ()=>{console.log('Listening on port', port)});

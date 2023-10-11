@@ -73,8 +73,19 @@ export default function Questions() {
       student_id: si.roll_no,
       teacher_id: test.teacher_email
     }
-    console.log(testResponse);
-    //further implementation from here
+    axios.post('http://localhost:9999/submit_response', {testResponse}).
+    then((response)=>{
+      console.log('Test Submitted Successfully!')
+    }).
+    catch((error)=>{
+      if (error.response) {
+        console.log(`Server Error: ${error.response.data}`);
+      } else if (error.request) {
+        console.log(`No response received from the server`);
+      } else {
+        console.log(`Request Error: ${error.message}`);
+      }
+    });
   }
   /*useEffect(() => {
     function preventRightClick(event) {
