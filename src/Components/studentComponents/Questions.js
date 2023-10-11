@@ -46,12 +46,34 @@ export default function Questions() {
   const submitResponse = () => {
     const studentDetails = getStudentDetails();
     const si = studentDetails.studentInfo;
+    let marks = 0.00;
+    for (let i = 0; i < fetchedQuestions.length; i++){
+      const fetchedQuestion = fetchedQuestions[i];
+      const userSelectedOption = userSelectedOptions.find((option)=> option.question_id === fetchedQuestion.question_id);
+      if(userSelectedOption){
+        if(fetchedQuestion.correct_option === 'a' && userSelectedOption.option_key === 'option1'){
+          marks += 3.33;
+        }
+        else if(fetchedQuestion.correct_option === 'b' && userSelectedOption.option_key === 'option2'){
+          marks += 3.33;
+        }
+        else if(fetchedQuestion.correct_option === 'c' && userSelectedOption.option_key === 'option3'){
+          marks += 3.33;
+        }else if(fetchedQuestion.correct_option === 'd' && userSelectedOption.option_key === 'option4'){
+          marks += 3.33;
+        }
+      }
+    }
     const testResponse = {
       response_id: test.test_id,
       response_data: userSelectedOptions,
+      marks_scored: marks,
+      total_marks: test.test_marks,
+      percentage: `${(marks / test.test_marks * 100)} %`,
       student_id: si.roll_no,
       teacher_id: test.teacher_email
     }
+    console.log(testResponse);
     //further implementation from here
   }
   /*useEffect(() => {
@@ -93,10 +115,10 @@ export default function Questions() {
   const handleOptionSelect = (questionId,questionText, optionIndex, optionText) => {
     const updatedSelectedOptions = [...userSelectedOptions];
     updatedSelectedOptions[currentQuestionIndex] = {
-      questionId,
-      questionText,
-      optionIndex,
-      selectedOption: optionText
+      question_id: questionId,
+      question_text: questionText,
+      option_key: optionIndex,
+      selected_option: optionText
     }
     setUserSelectedOptions(updatedSelectedOptions);
     console.log(userSelectedOptions);
