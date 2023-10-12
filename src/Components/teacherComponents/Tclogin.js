@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import {emailPattern} from '../patterns/patterns'
 import axios from 'axios';
 import {useNavigate} from 'react-router';
+import Transitions from '../commonComponents/Trasitions';
 let teacherProfile;
 export function getTeacherDetails(){
     return teacherProfile;
@@ -63,6 +64,7 @@ export default function Tclogin() {
         }
     };
   return (
+    <Transitions> 
     <Layout>
     <form onSubmit={loginTeacher} className="container w-25 card border border-dark-subtle" style={logCardStyle}>
         <div className="card-body">
@@ -91,5 +93,6 @@ export default function Tclogin() {
         </div>
     </form>
     </Layout>
+    </Transitions>
   )
 }

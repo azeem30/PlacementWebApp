@@ -3,6 +3,7 @@ import axios from 'axios'
 import Layout from '../commonComponents/Layout'
 import {emailPattern, passwordPattern} from '../patterns/patterns'
 import { useNavigate } from 'react-router-dom'
+import Transitions from '../commonComponents/Trasitions'
 
 export default function Stsign() { 
   const navigate = useNavigate();
@@ -91,6 +92,7 @@ let departmentDropdownStyle = {
   marginRight: '40px'
 }
   return (
+    <Transitions>
     <Layout>
       <form onSubmit={registerStudent} className="container w-25 card border border-dark-subtle" style={signCardStyle}>
         <div className="card-body">
@@ -188,5 +190,6 @@ let departmentDropdownStyle = {
         </div>
     </form>
     </Layout>
+    </Transitions>
   )
 }
