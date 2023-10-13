@@ -256,6 +256,7 @@ app.post('/get_pending_tests', (req, res)=>{
         t.marks AS test_marks,
         t.duration AS test_duration,
         t.difficulty AS test_difficulty,
+        t.teacher_email AS teacher_email,
         s.subject_name AS subject_name
         FROM tests t
         JOIN subjects s ON t.subject_id = s.subject_id
@@ -267,6 +268,7 @@ app.post('/get_pending_tests', (req, res)=>{
         t.marks AS test_marks,
         t.duration AS test_duration,
         t.difficulty AS test_difficulty,
+        t.teacher_email AS teacher_email,
         s.subject_name AS subject_name
         FROM tests t
         JOIN subjects s ON t.subject_id = s.subject_id
@@ -297,7 +299,7 @@ app.post('/questions', (req, res)=>{
     try{
         const {test_id, test_title, test_marks, test_duration, test_difficulty, subject_name} = req.body.test;
         if(test_difficulty==='Combined'){
-        const selectQuery = `SELECT * FROM questions_dataset WHERE subject_name=?`;
+        const selectQuery = `SELECT * FROM questions_dataset WHERE subject_name=? LIMIT 30`;
         const values=[subject_name];
         db.query(selectQuery, values, (error, results)=>{
             if(error){
@@ -316,7 +318,7 @@ app.post('/questions', (req, res)=>{
         });
         }
         else{
-        const selectQuery = `SELECT * FROM questions_dataset WHERE question_difficulty=? AND subject_name=?`;
+        const selectQuery = `SELECT * FROM questions_dataset WHERE question_difficulty=? AND subject_name=? LIMIT 30`;
         const values=[test_difficulty, subject_name];
         db.query(selectQuery, values, (error, results)=>{
             if(error){
@@ -334,6 +336,26 @@ app.post('/questions', (req, res)=>{
             }
         });
     }
+    }catch(error){
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+app.post('/submit_response', (req, res)=>{
+    try{
+        const {response_id, response_data, marks_scored, total_marks, percentage, student_id, teacher_id} = req.body.testResponse;
+        const insertQuery = `INSERT INTO test_responses (id, data, marks_scored, total_marks, percentage, student_id, teacher_id)
+        values (?, ?, ?, ?, ?, ?, ?);`
+        const values = [response_id, JSON.stringify(response_data), marks_scored, total_marks, percentage, student_id, teacher_id];
+        db.query(insertQuery, values, (error, results)=>{
+            if(error){
+                console.error('Error querying MySQL:', error);
+                res.status(500).json({ error: 'Internal Server Error' });
+            }
+            else{
+                res.status(200).json({ message: 'Response submitted successfully!'});
+            }
+        })
     }catch(error){
         res.status(500).json({ error: 'Internal Server Error' });
     }
