@@ -1,6 +1,7 @@
 import React from 'react'
 import Layout from '../commonComponents/Layout';
 import { Link } from 'react-router-dom';
+import Transitions from '../commonComponents/Trasitions';
 
 export default function Sthome() {
     let imageStyle = {
@@ -12,6 +13,7 @@ export default function Sthome() {
         top: '20px',
     };
   return (
+  <Transitions>
     <Layout>
       <div className='d-flex justify-content-evenly'>
         <div className="card text-center mb-3 border border-danger border-2" style={cardStyle}>
@@ -32,5 +34,6 @@ export default function Sthome() {
         </div>
       </div>  
     </Layout>
+  </Transitions> 
   )
 }

@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import {emailPattern} from '../patterns/patterns'
 import axios from 'axios';
 import {useNavigate} from 'react-router';
+import Transitions from '../commonComponents/Trasitions';
 let studentProfile;
 export function getStudentDetails(){
     return studentProfile;
@@ -63,6 +64,7 @@ export default function Stlogin() {
     };
     
   return (
+    <Transitions>
     <Layout>
     <form onSubmit={loginStudent} className="container w-25 card border border-dark-subtle" style={logCardStyle}>
         <div className="card-body">
@@ -91,5 +93,6 @@ export default function Stlogin() {
         </div>
     </form>
     </Layout>
+</Transitions>
   )
 }
