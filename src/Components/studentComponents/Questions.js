@@ -15,6 +15,10 @@ export default function Questions() {
   const [randomizedQuestions, setRandomizedQuestions] = useState([]);
   const [userSelectedOptions, setUserSelectedOptions] = useState([]);
   const [questionNumber, setQuestionNumber] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const [responseMessage, setResponseMessage] = useState(false);
+  const [isConfirmationBoxVisible, setConfirmationBoxVisible] = useState(false);
+
   useEffect(()=>{
     const fetchQuestions = async () => {
       try{
@@ -44,6 +48,7 @@ export default function Questions() {
     fetchQuestions();
   },[]);
   const submitResponse = () => {
+    setIsLoading(true);
     const studentDetails = getStudentDetails();
     const si = studentDetails.studentInfo;
     let marks = 0.00;
@@ -75,15 +80,17 @@ export default function Questions() {
     }
     axios.post('http://localhost:9999/submit_response', {testResponse}).
     then((response)=>{
-      console.log('Test Submitted Successfully!')
+      setIsLoading(false);
+      setResponseMessage('Test Submitted Successfully!')
     }).
     catch((error)=>{
+      setIsLoading(false);
       if (error.response) {
-        console.log(`Server Error: ${error.response.data}`);
+        setResponseMessage(`Server Error: ${error.response.data}`);
       } else if (error.request) {
-        console.log(`No response received from the server`);
+        setResponseMessage(`No response received from the server`);
       } else {
-        console.log(`Request Error: ${error.message}`);
+        setResponseMessage(`Request Error: ${error.message}`);
       }
     });
   }
@@ -146,6 +153,21 @@ export default function Questions() {
       setQuestionNumber(questionNumber - 1);
     }
   }
+  const openConfirmationBox = () => {
+    setConfirmationBoxVisible(true);
+  };
+
+  const closeConfirmationBox = () => {
+    setConfirmationBoxVisible(false);
+  };
+
+  const handleSubmit = () => {
+    openConfirmationBox(); 
+  };
+  const submitTestAfterConfirmation = () =>{
+    closeConfirmationBox();
+    submitResponse();
+  }
   return (
     <Layout>
       <div style={detailContainer} className='bg-warning-subtle border-bottom border-warning'>
@@ -190,9 +212,35 @@ export default function Questions() {
               <button className='btn btn-primary border border-dark my-2' onClick={handlePreviousQuestion}>Previous</button>
               <CountdownTimer initialTime={test.test_duration * 60} /> 
               <button className='btn btn-primary border border-dark my-2' onClick={handleNextQuestion}>Next</button>
-              <button disabled={!(currentQuestionIndex === randomizedQuestions.length -1)} onClick={submitResponse} className="btn btn-success border border-dark my-2">Submit</button>
+              <button disabled={!(currentQuestionIndex === randomizedQuestions.length -1)} onClick={handleSubmit} className="btn btn-success border border-dark my-2">Submit</button>
           </div>
       </div>
+      <div className='modal' tabIndex='-1' role='dialog' style={{ display: isConfirmationBoxVisible ? 'block' : 'none' }}>
+        <div className="modal-dialog" role='document'>
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title">Confirm Scheduling</h5>
+              <button type="button" className="btn btn-danger" onClick={closeConfirmationBox} aria-label="Close">&times;</button>
+            </div>
+            <div className="modal-body d-block">
+              <p className='d-flex justify-content-center fw-semibold'>Are you sure you want to submit this test?</p>
+            </div>
+            <div className="modal-footer d-flex justify-content-center">
+              <button type='button' onClick={closeConfirmationBox} className="btn btn-secondary">Cancel</button>
+              <button type='button' onClick={submitTestAfterConfirmation} className="btn btn-success">Confirm</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      {isLoading ? (
+        <div className="progress">
+          <div className="progress-bar progress-bar-striped progress-bar-animated" style={{ width: '100%' }}></div>
+        </div>
+      ) : responseMessage ? (
+        <div className={`alert ${responseMessage.includes('Successfully') ? 'alert-success' : 'alert-danger'}`} role="alert">
+          {responseMessage}
+        </div>
+      ) : null}
     </Layout>
   )
 }
