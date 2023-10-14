@@ -11,6 +11,7 @@ export default function Schtest() {
     const [selectedSubject, setSelectedSubject] = useState(0);
     const [department, setDepartment] = useState('');
     const [messageClass, setMessageClass] = useState('text-success');
+    const [isConfirmationBoxVisible, setConfirmationBoxVisible] = useState(false);
     const scheduleFormStyle = {
         position: 'relative',
         top: '6%'
@@ -54,6 +55,20 @@ export default function Schtest() {
         }while(secondCharIndex === firstCharIndex);
         const sequence = chars.charAt(firstCharIndex) + chars.charAt(secondCharIndex);
         return sequence;
+    }
+    const openConfirmationBox = () => {
+        setConfirmationBoxVisible(true);
+    }
+    const closeConfirmationBox = () => {
+        setConfirmationBoxVisible(false);
+    }
+    const scheduleTestAfterConfirmation = () => {
+        closeConfirmationBox();
+        scheduleTest();
+    }
+    const getSubjectNameById = (subjectId) => {
+        const isSubjectAvailable = subjects.find((item) => item.subject_id === subjectId);
+        return isSubjectAvailable ? isSubjectAvailable.subject_name : '';
     }
     async function getTeacherProfile() {
         try{
@@ -198,7 +213,29 @@ export default function Schtest() {
                 </div>
                 <div className='mt-3 bg-dark-subtle' style={separator}></div>
                 <div className="d-flex justify-content-center mt-3">
-                    <button type="button" onClick={scheduleTest} className="btn btn-outline-success fw-semibold">Schedule Test</button>
+                    <button type="button" onClick={openConfirmationBox} className="btn btn-outline-success fw-semibold">Schedule Test</button>
+                </div>
+                <div className='modal' tabIndex='-1' role='dialog' style={{ display: isConfirmationBoxVisible ? 'block' : 'none' }}>
+                    <div className="modal-dialog" role='document'>
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title">Confirm Scheduling</h5>
+                                <button type="button" className="btn btn-danger" onClick={closeConfirmationBox} aria-label="Close">&times;</button>
+                            </div>
+                            <div className="modal-body d-block">
+                                    <p className='fw-medium'>Title: <span className='fw-normal'>{`${testInfo.testTitle}`}</span></p>
+                                    <p className='fw-medium'>Marks: <span className='fw-normal'>{`${testInfo.testMarks}`}</span></p>
+                                    <p className='fw-medium'>Duration: <span className='fw-normal'>{`${testInfo.testDuration} minutes`}</span></p>
+                                    <p className='fw-medium'>Difficulty: <span className='fw-normal'>{`${testInfo.testDifficulty}`}</span></p>
+                                    <p className='fw-medium'>Subject: <span className='fw-normal'>{getSubjectNameById(testInfo.testSubject)}</span></p>
+                                    <p className='d-flex justify-content-center fw-semibold'>Are you sure you want to schedule this test?</p>
+                            </div>
+                            <div className="modal-footer d-flex justify-content-center">
+                                <button type='button' onClick={closeConfirmationBox} className="btn btn-secondary">Cancel</button>
+                                <button type='button' onClick={scheduleTestAfterConfirmation} className="btn btn-primary">Confirm</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <p id='message' className={messageClass + " d-flex justify-content-center mt-2"}></p>
             </div>

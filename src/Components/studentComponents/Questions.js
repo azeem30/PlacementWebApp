@@ -1,31 +1,68 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { useLocation} from 'react-router-dom'
 import Layout from '../commonComponents/Layout'
 import axios from 'axios';
+import CountdownTimer from './timer';
 
 export default function Questions() {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const testJSON = queryParams.get('data');
   const test = JSON.parse(decodeURIComponent(testJSON));
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [fetchedQuestions, setFetchedQuestions] = useState([]);
   const [randomizedQuestions, setRandomizedQuestions] = useState([]);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [userSelectedOptions, setUserSelectedOptions] = useState([]);
-  useEffect(()=>{fetchQuestions();},[]);
+  const [questionNumber, setQuestionNumber] = useState(1);
+  useEffect(()=>{
+    const fetchQuestions = async () => {
+      try{
+        const response = await axios.post('http://localhost:9999/questions', {test});
+        if(response.status===200){
+          const questions = response.data.questions;
+          const shuffledQuestions = shuffleArray(questions);
+          setFetchedQuestions(questions);
+          setRandomizedQuestions(shuffledQuestions);
+          setUserSelectedOptions(new Array(fetchedQuestions.length).fill(''));
+        }
+        else{
+          console.log('Failed to get data');
+        }
+      }
+      catch(error){
+      if (error.response) {
+          console.error('Server responded with status:', error.response.status);
+          console.error('Response data:', error.response.data);
+      } else if (error.request) {
+          console.error('No response received:', error.request);
+      } else {
+          console.error('Error:', error.message);
+      }
+      }
+    }
+    fetchQuestions();
+  },[]);
+  useEffect(() => {
+    function preventRightClick(event) {
+      if (event.button === 2) {
+        event.preventDefault();
+      }
+    }
+    window.addEventListener('contextmenu', preventRightClick);
+    return () => {
+      window.removeEventListener('contextmenu', preventRightClick);
+    };
+  }, []);
   let placingContainer = {
     position: 'absolute',
     top: '20%',
     left: '5%',
     width: '60%',
-    height: '268px'
+    minHeigh: '300px',
+    display: 'flex',
+    flexDirection: 'column',
+    userSelect: 'none'
   }  
-  let timerStyle = {
-    width: '70px',
-    height:'30px',
-    fontSize: '16px',
-    marginTop: '10px'
-  }
   let detailContainer = {
     height: '50px',
     width: '100%',
@@ -45,62 +82,18 @@ export default function Questions() {
     const updatedSelectedOptions = [...userSelectedOptions];
     updatedSelectedOptions[currentQuestionIndex] = optionIndex;
     setUserSelectedOptions(updatedSelectedOptions);
+    console.log(userSelectedOptions);
   }
   const handleNextQuestion = () => {
     if(currentQuestionIndex < fetchedQuestions.length - 1){
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
+      setCurrentQuestionIndex(currentQuestionIndex+1);
+      setQuestionNumber(questionNumber + 1);
     }
   }
   const handlePreviousQuestion = () => {
-    if(currentQuestionIndex > 0){
-      setCurrentQuestionIndex(currentQuestionIndex - 1);
-    }
-  }
-  const renderOptions = (question) => {
-    const options = [];
-    for(let i = 1; i<=4; i++){
-      const optionKey = `option${i}`;
-      const optionText = question[optionKey];
-      options.push(
-        <li className="list-group-item" key={optionKey}>
-        <input
-          className="form-check-input me-1"
-          type="radio"
-          name={`question-${currentQuestionIndex}`}
-          value={optionKey}
-          id={`option-${optionKey}`}
-          checked={optionKey === userSelectedOptions[currentQuestionIndex]}
-          onChange={() => handleOptionSelect(optionKey)}
-        />
-        <label className="form-check-label text-wrap" htmlFor={`option-${optionKey}`}>{optionText}</label>
-      </li>
-      );
-    }
-  }
-  async function fetchQuestions(){
-    try{
-      const response = await axios.post('http://localhost:9999/questions', {test});
-      if(response.status===200){
-        const questions = response.data.questions;
-        const shuffledQuestions = shuffleArray(questions);
-        setFetchedQuestions(questions);
-        setRandomizedQuestions(shuffledQuestions);
-        setUserSelectedOptions(new Array(questions.length).fill(''));
-        console.log(shuffledQuestions);
-      }
-      else{
-        console.log('Failed to get data');
-      }
-    }
-    catch(error){
-    if (error.response) {
-        console.error('Server responded with status:', error.response.status);
-        console.error('Response data:', error.response.data);
-    } else if (error.request) {
-        console.error('No response received:', error.request);
-    } else {
-        console.error('Error:', error.message);
-    }
+    if (currentQuestionIndex > 0) {
+      setCurrentQuestionIndex(currentQuestionIndex-1);
+      setQuestionNumber(questionNumber - 1);
     }
   }
   return (
@@ -116,16 +109,31 @@ export default function Questions() {
       </div>
       <div className="container bg-info-subtle rounded border border-primary-subtle" style={placingContainer}>
         <div className='mx-1 my-2'>
-          <p className='fw-semibold text-wrap w-100'>{/*randomizedQuestions[currentQuestionIndex].question_text*/}</p>
+          <p className='fw-semibold d-flex justify-content-between text-wrap w-100'>{`${questionNumber}. ${randomizedQuestions[currentQuestionIndex]?.question_text}`} <span className={randomizedQuestions[currentQuestionIndex]?.question_difficulty==='Easy'? 'text-success' : randomizedQuestions[currentQuestionIndex]?.question_difficulty === 'Medium' ? 'text-warning' : 'text-danger'}>{randomizedQuestions[currentQuestionIndex]?.question_difficulty}</span></p>
         </div>
         <div className='border border-warning-subtle'>
           <ul className="list-group">
-              {/*renderOptions(randomizedQuestions[currentQuestionIndex])*/}
+          {['option1', 'option2', 'option3', 'option4'].map((optionKey) => (
+            <li className="list-group-item" key={optionKey}>
+              <input
+                className="form-check-input me-1"
+                type="radio"
+                name={`question-${currentQuestionIndex}`}
+                value={optionKey}
+                id={`option-${optionKey}`}
+                checked={optionKey === userSelectedOptions[currentQuestionIndex]}
+                onChange={() => handleOptionSelect(optionKey)}
+              />
+              <label className="form-check-label text-wrap" htmlFor={`option-${optionKey}`}>
+                {randomizedQuestions[currentQuestionIndex]?.[optionKey]}
+              </label>
+            </li>
+          ))} 
           </ul>
         </div>
         <div className='d-flex justify-content-around'>
               <button className='btn btn-primary border border-dark my-2' onClick={handlePreviousQuestion}>Previous</button>
-              <div className='badge text-bg-danger fw-normal text-wrap display-6 border border-dark' style={timerStyle}>0:00</div>
+              <CountdownTimer initialTime={test.test_duration * 60} /> 
               <button className='btn btn-primary border border-dark my-2' onClick={handleNextQuestion}>Next</button>
           </div>
       </div>

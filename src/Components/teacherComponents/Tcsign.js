@@ -3,6 +3,7 @@ import Layout from '../commonComponents/Layout'
 import { emailPattern, passwordPattern } from '../patterns/patterns';
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom';
+import Transitions from '../commonComponents/Trasitions';
 
 export default function Tcsign() {
   const navigate = useNavigate();
@@ -71,6 +72,7 @@ let signButtonStyle ={
   marginTop: '15px',
 }
   return (
+    <Transitions>
     <Layout>
       <form onSubmit={registerTeacher} className="container w-25 card border border-dark-subtle" style={signCardStyle}>
         <div className="card-body">
@@ -116,5 +118,6 @@ let signButtonStyle ={
         </div>
       </form>
     </Layout>
+    </Transitions>
   )
 }
