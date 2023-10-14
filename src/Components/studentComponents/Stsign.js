@@ -1,14 +1,17 @@
 import React, {useState} from 'react'
 import axios from 'axios'
-import Layout from '../Layout'
+import Layout from '../commonComponents/Layout'
 import {emailPattern, passwordPattern} from '../patterns/patterns'
+import { useNavigate } from 'react-router-dom'
 
 export default function Stsign() { 
+  const navigate = useNavigate();
   const [id, setId] = useState('');
   const [studentEmail, setStudentEmail] = useState('');
   const [studentPassword, setStudentPassword] = useState('');
   const [department, setDepartment] = useState(1);
   const [semester, setSemester] = useState(1);
+  const [messageClass, setMessageClass] = useState(`text-success`);
   const [studentName, setStudentName] = useState('');
   const [results, setResults] = useState([
     { sem: 1, sgpi: '', cgpi: '', required: true},  
@@ -37,6 +40,7 @@ export default function Stsign() {
     event.preventDefault();
     const email_error = document.getElementById('email-error');
     const password_error = document.getElementById('password-error');
+    const registration_message = document.getElementById('registration-message');
     if(!emailPattern.test(studentEmail)){
       email_error.textContent = 'Invalid email format!';
     }
@@ -44,18 +48,26 @@ export default function Stsign() {
       password_error.textContent = 'The password should contain uppercase letters, one special symbol, numbers and should be 8 characters long';
     }
     else{
-        axios.post(`http://localhost:9999/student_signup`, {studentData}).then(res => console.log('Registered Successfully', res.data))
+        axios.post(`http://localhost:9999/student_signup`, {studentData}).
+        then((res) => {
+          registration_message.textContent='Registration Successful!';
+          navigate('/student_login');
+        })
         .catch((error) => {
           if (error.response) {
-            console.error('Server Error:', error.response.data);
+            setMessageClass(`text-danger`);
+            registration_message.textContent = `Server Error: ${error.response.data}`;
           } else if (error.request) {
-            console.error('No response received from the server');
+            setMessageClass(`text-danger`);
+            registration_message.textContent = `No response received from the server`;
           } else {
-            console.error('Request Error:', error.message);
+            setMessageClass(`text-danger`);
+            registration_message.textContent = `Request Error: ${error.message}`;
           }
-        });
-        email_error.textContent = '';
-        password_error.textContent = '';
+        }).finally(()=>{
+          email_error.textContent = '';
+          password_error.textContent = '';
+        })
     } 
   };
 
@@ -172,6 +184,7 @@ let departmentDropdownStyle = {
             <div className="d-flex justify-content-center" style={signButtonStyle}>
                 <button type="submit" className="btn btn-outline-success">Register</button>
             </div>
+            <p className={messageClass + ' d-flex justify-content-center mt-3'} id='registration-message'></p>
         </div>
     </form>
     </Layout>

@@ -27,21 +27,15 @@ export default function Choice() {
                     <div class="card border border-dark-subtle mx-3" style={cardStyle}>
                         <img style={imageLeftStyle} src="https://img.freepik.com/free-vector/college-university-students-group-young-happy-people-standing-isolated-white-background_575670-66.jpg?w=2000" class="card-img-top" alt="..."/>
                         <div class="d-flex justify-content-center card-body">
-                            <button class="btn btn-success"><Link to='/Stlogin' className='text-white' style={linkStyle}>Student Login</Link></button>
-                        </div>
-                        <div class="d-flex justify-content-center card-body">
-                            <button class="btn btn-success"><Link to='/student_signup' className='text-white' style={linkStyle}>Register</Link></button>
+                            <button class="btn btn-success"><Link to='/student_login' className='text-white' style={linkStyle}>I am a Student</Link></button>
                         </div>
                     </div>
                     <div class="card border border-dark-subtle" style={cardStyle}>
                                 <img src="https://img.freepik.com/free-vector/teacher-standing-near-blackboard-holding-stick-isolated-flat-vector-illustration-cartoon-woman-character-near-chalkboard-pointing-alphabet_74855-8600.jpg" class="card-img-top" alt="..."/>
                                 <div style={imageRightStyle}></div>
                                 <div class="d-flex justify-content-center card-body">
-                                    <button style={buttonStyle} class="btn btn-success"><Link to='/teacher_signup' className='text-white' style={linkStyle}>Teacher Login</Link></button>
+                                    <button style={buttonStyle} class="btn btn-success"><Link to='/teacher_login' className='text-white' style={linkStyle}>I am a Teacher</Link></button>
                                 </div>
-                                <div class="d-flex justify-content-center card-body">
-                            <button class="btn btn-success"><Link to='/teacher_signup' className='text-white' style={linkStyle}>Register</Link></button>
-                        </div>
                     </div>
             </div>
         </Layout>
