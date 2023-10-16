@@ -176,6 +176,8 @@ export default function Questions() {
           <p style={detailStyle} className='mx-3'>Marks: <span className='fw-semibold'>{test.test_marks}</span></p>
           <p style={detailStyle} className='mx-3'>Duration: <span className='fw-semibold'>{`${test.test_duration} minutes`}</span></p>
           <p style={detailStyle} className='mx-3'>Difficulty: <span className='fw-semibold'>{test.test_difficulty}</span></p>
+          <p style={detailStyle} className='mx-3'>Date: <span className='fw-semibold'>{test.test_date.slice(0, 10)}</span></p>
+          <p style={detailStyle} className='mx-3'>Time: <span className='fw-semibold'>{test.test_time}</span></p>
           <p style={detailStyle} className='mx-3'>Subject: <span className="fw-semibold">{test.subject_name}</span></p>
         </div>
       </div>

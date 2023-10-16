@@ -9,11 +9,11 @@ export default function Tests() {
     const [tests, setTests] = useState([]);
     const navigate = useNavigate();
     let testListCardStyle = {
-        width: '18rem'
+        width: '90%'
     }
     let containerStyle = {
         position:'relative',
-        top: '4%'
+        top: '4%',
     }
     let separator = {
         height: '0.5px',
@@ -34,8 +34,16 @@ export default function Tests() {
             const si = studentDetails.studentInfo;
             const response  = await axios.post('http://localhost:9999/get_pending_tests', {si});
             if(response.status === 200){
-                console.log(response.data.pendingTestDetails);
-                setTests(response.data.pendingTestDetails);
+                const pendingTests = response.data.pendingTestDetails.map((test)=>{
+                    const testDateTime = new Date(`${test.test_date}T${test.test_time}`);
+                    const currentDateTime = new Date();
+                    const isTestReady = testDateTime <= currentDateTime ;
+                    return {
+                        ...test,
+                        isReady: isTestReady,
+                    }
+                });
+                setTests(pendingTests);
             }
             else{
                 console.log('Failed to get data');
@@ -54,7 +62,7 @@ export default function Tests() {
   return (
     <Layout>
         <div className="container d-flex justify-content-center" style={containerStyle}>
-            <div class="card w-75" style={testListCardStyle}>
+            <div class="card" style={testListCardStyle}>
                 <div class="card-body">
                     <div className='d-flex justify-content-center'>
                         <h4 class="card-title">Pending Tests</h4>
@@ -70,7 +78,9 @@ export default function Tests() {
                                         <p className='my-2'>Duration: <span className='fw-semibold'>{`${test.test_duration} minutes`}</span></p>
                                         <p className='my-2'>Difficulty: <span className='fw-semibold'>{test.test_difficulty}</span></p>
                                         <p className='my-2'>Subject: <span className="fw-semibold">{test.subject_name}</span></p>
-                                        <button onClick = {()=>startTest(test)}className='btn btn-success' style={startButtonStyle}>Start</button>
+                                        <p className='my-2'>Date: <span className="fw-semibold">{test.test_date?.slice(0, 10)}</span></p>
+                                        <p className='my-2'>Time: <span className="fw-semibold">{test.test_time}</span></p>
+                                        <button onClick = {()=>startTest(test)} disabled={!(test.isReady)} className='btn btn-success' style={startButtonStyle}>Start</button>
                                     </li>
                                 </div>
                             ))}

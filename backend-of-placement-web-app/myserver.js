@@ -8,7 +8,7 @@ app.use(
     session({
         secret: `It's a secret`,
         resave: false,
-        saveUninitialized: true,
+        saveUninitialized: true
     })
 );
 app.use(cors());
@@ -19,7 +19,6 @@ const db = mysql2.createConnection({
     password: 'Azeem@123',
     database: 'placementwebapp'
 });
-
 app.post('/student_signup', (req, res)=>{
     try{
     const {roll_no, email, name, password, department_id, semester, sgpi, cgpi} = req.body.studentData;
@@ -230,9 +229,9 @@ app.post('/get_teacher_subjects', (req, res)=>{
 
 app.post('/schedule_test', (req, res)=>{
     try{
-        const {id, title, marks, duration, difficulty, subject_id, teacher_email} = req.body.testDetails;
-        const insertQuery = 'INSERT INTO tests (`id`, `title`, `marks`, `duration`, `difficulty`, `subject_id`, `teacher_email`) values (?, ?, ?, ?, ?, ?, ?)';
-        const values = [id, title, marks, duration, difficulty, subject_id, teacher_email];
+        const {id, title, marks, duration, difficulty, date, time, subject_id, teacher_email} = req.body.testDetails;
+        const insertQuery = 'INSERT INTO tests (`id`, `title`, `marks`, `duration`, `difficulty`, `subject_id`, `teacher_email`, `date`, `time`) values (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+        const values = [id, title, marks, duration, difficulty, subject_id, teacher_email, date, time];
         db.query(insertQuery, values, (error, results)=>{
             if(error){
                 console.error('Error querying MySQL:', error);
@@ -256,6 +255,8 @@ app.post('/get_pending_tests', (req, res)=>{
         t.marks AS test_marks,
         t.duration AS test_duration,
         t.difficulty AS test_difficulty,
+        t.date AS test_date,
+        t.time AS test_time,
         t.teacher_email AS teacher_email,
         s.subject_name AS subject_name
         FROM tests t
@@ -268,6 +269,8 @@ app.post('/get_pending_tests', (req, res)=>{
         t.marks AS test_marks,
         t.duration AS test_duration,
         t.difficulty AS test_difficulty,
+        t.date AS test_date,
+        t.time AS test_time,
         t.teacher_email AS teacher_email,
         s.subject_name AS subject_name
         FROM tests t

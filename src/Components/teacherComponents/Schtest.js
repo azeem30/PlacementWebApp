@@ -10,6 +10,7 @@ export default function Schtest() {
     const [subjects, setSubjects] = useState([]);
     const [selectedSubject, setSelectedSubject] = useState(0);
     const [department, setDepartment] = useState('');
+    const [date, setDate] = useState(null);
     const [messageClass, setMessageClass] = useState('text-success');
     const [isConfirmationBoxVisible, setConfirmationBoxVisible] = useState(false);
     const scheduleFormStyle = {
@@ -43,9 +44,16 @@ export default function Schtest() {
         testMarks: 0,
         testDuration: 0,
         testDifficulty: '',
+        testDate: '',
+        testTime: '',
         testSubject: 0,
         teacherEmail: ''
     });
+    const inputDate = (input) => {
+        const inputDateObject = new Date(input);
+        const isoString = inputDateObject.toISOString().slice(0,10);
+        setTestInfo({...testInfo, testDate: isoString});  
+    }
     const generateTestId = () => {
         const  chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
         const firstCharIndex = Math.floor(Math.random() * chars.length);
@@ -126,6 +134,8 @@ export default function Schtest() {
                   marks: testInfo.testMarks,
                   duration: testInfo.testDuration,
                   difficulty: testInfo.testDifficulty,
+                  date: testInfo.testDate,
+                  time: testInfo.testTime,
                   subject_id: testInfo.testSubject,
                   teacher_email: testInfo.teacherEmail
         };
@@ -180,6 +190,32 @@ export default function Schtest() {
                         </ul>
                 </div>
                 </div>
+                <div className="d-flex justify-content-around">
+                    <div className="mb-3">
+                        <label htmlFor="testDateInput" className="form-label fw-semibold">Date</label>
+                        <input
+                            type="date"
+                            onChange={(event) => {
+                                    inputDate(event.target.value); 
+                                }}
+                            className="form-control"
+                            id="testDateInput"
+                            style={textInputStyle}/>
+                    </div>
+                    <div className="mb-3">
+                        <label htmlFor="testTimeInput" className="form-label fw-semibold">Time</label>
+                        <input
+                                type="time"
+                                onChange={(event) => { 
+                                    const timeParts = event.target.value.split(':');
+                                    setTestInfo({ ...testInfo, testTime: `${timeParts[0]}:${timeParts[1]}:00` }); 
+                                }}
+                                className="form-control"
+                                id="testTimeInput"
+                                style={textInputStyle}
+                        />
+                    </div>
+                </div>
                 <div className='d-flex justify-content-around' style={bottomDiv}>
                     <div className="dropdown">
                         <button id='subject-dropdown-button' className="btn btn-success border border-dark-subtle dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -227,6 +263,8 @@ export default function Schtest() {
                                     <p className='fw-medium'>Marks: <span className='fw-normal'>{`${testInfo.testMarks}`}</span></p>
                                     <p className='fw-medium'>Duration: <span className='fw-normal'>{`${testInfo.testDuration} minutes`}</span></p>
                                     <p className='fw-medium'>Difficulty: <span className='fw-normal'>{`${testInfo.testDifficulty}`}</span></p>
+                                    <p className='fw-medium'>Date: <span className='fw-normal'>{`${testInfo.testDate}`}</span></p>
+                                    <p className='fw-medium'>Time: <span className='fw-normal'>{`${testInfo.testTime}`}</span></p>
                                     <p className='fw-medium'>Subject: <span className='fw-normal'>{getSubjectNameById(testInfo.testSubject)}</span></p>
                                     <p className='d-flex justify-content-center fw-semibold'>Are you sure you want to schedule this test?</p>
                             </div>
