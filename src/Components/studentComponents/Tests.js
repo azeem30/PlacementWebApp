@@ -69,22 +69,26 @@ export default function Tests() {
                     </div>
                     <div className='bg-secondary' style={separator}></div>
                     <div className='mb-3'>
-                        <ol class="list-group">
-                            {tests.map((test, index)=>(
-                                <div className='d-flex justify-content-evenly' key={index}>
-                                    <li className='d-flex w-100 my-2 justify-content-between text-wrap rounded border border-success-subtle list-group-item'>
-                                        <p className='my-2'>Title: <span className='fw-semibold'>{test.test_title}</span></p>
-                                        <p className='my-2'>Marks: <span className='fw-semibold'>{test.test_marks}</span></p>
-                                        <p className='my-2'>Duration: <span className='fw-semibold'>{`${test.test_duration} minutes`}</span></p>
-                                        <p className='my-2'>Difficulty: <span className='fw-semibold'>{test.test_difficulty}</span></p>
-                                        <p className='my-2'>Subject: <span className="fw-semibold">{test.subject_name}</span></p>
-                                        <p className='my-2'>Date: <span className="fw-semibold">{test.test_date?.slice(0, 10)}</span></p>
-                                        <p className='my-2'>Time: <span className="fw-semibold">{test.test_time}</span></p>
-                                        <button onClick = {()=>startTest(test)} disabled={!(test.isReady)} className='btn btn-success' style={startButtonStyle}>Start</button>
-                                    </li>
-                                </div>
-                            ))}
-                        </ol>
+                    {tests.length === 0 ? (
+                                <p className='d-flex justify-content-center fw-normal'>No tests scheduled for you at the moment!</p>
+                            ) : (
+                                <ol className="list-group">
+                                    {tests.map((test, index) => (
+                                        <div className='d-flex justify-content-evenly' key={index}>
+                                            <li className='d-flex w-100 my-2 justify-content-between text-wrap rounded border border-success-subtle list-group-item'>
+                                                <p className='my-2'>Title: <span className='fw-semibold'>{test.test_title}</span></p>
+                                                <p className='my-2'>Marks: <span className='fw-semibold'>{test.test_marks}</span></p>
+                                                <p className='my-2'>Duration: <span className='fw-semibold'>{`${test.test_duration} minutes`}</span></p>
+                                                <p className='my-2'>Difficulty: <span className='fw-semibold'>{test.test_difficulty}</span></p>
+                                                <p className='my-2'>Subject: <span className="fw-semibold">{test.subject_name}</span></p>
+                                                <p className='my-2'>Date: <span className="fw-semibold">{test.test_date?.slice(0, 10)}</span></p>
+                                                <p className='my-2'>Time: <span className="fw-semibold">{test.test_time}</span></p>
+                                                <button onClick={() => startTest(test)} disabled={!test.isReady} className='btn btn-success' style={startButtonStyle}>Start</button>
+                                            </li>
+                                        </div>
+                                    ))}
+                                </ol>
+                    )}
                     </div>
                 </div>
             </div>
