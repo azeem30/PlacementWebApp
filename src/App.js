@@ -9,14 +9,14 @@ import Stsign from './Components/studentComponents/Stsign';
 import Tcsign from './Components/teacherComponents/Tcsign';
 import Tests from './Components/studentComponents/Tests';
 import Choice from './Components/commonComponents/Choice';
-import { Routes, Route } from 'react-router-dom';
 import Questions from './Components/studentComponents/Questions';
+import { Routes, Route } from 'react-router-dom';
 
 function App() {
   //Aptify is a temporary title
   return (
     <>  
-    <Navbar title="Aptify"/>
+    <Navbar title='Aptify' isLoggedIn={false}/>
     <Routes>
       <Route exact path="/" Component={Choice}/> 
       <Route exact path="/student_signup" Component={Stsign}/>
