@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 export default function Navbar(props) {
   let imageStyle = {
@@ -7,9 +7,10 @@ export default function Navbar(props) {
     height: '30px'
   }
   let logoutStyle ={
-    marginLeft: '1175px'
+    marginLeft: '1150px'
   }
   const [isLogoutOpen, setLogoutOpen] = useState(false);
+  const navigate = useNavigate();
   const handleLogoutClick = () => {
     setLogoutOpen(true);
   }
@@ -17,7 +18,21 @@ export default function Navbar(props) {
     setLogoutOpen(false);
   }
   const handleConfirmLogout = () =>{
-
+    navigate('/');
+  }
+  const handleHomeClick = () =>{
+    const studentComponentNames = ['Sthome', 'Tests', 'Questions'];
+    const teacherComponentNames = ['Tchome', 'Schtest'];
+    const commonComponentNames = ['Choice'];
+    if(studentComponentNames.includes(props.componentName) && props.isLoggedIn === true){
+      navigate('/student_home');
+    }
+    else if(teacherComponentNames.includes(props.componentName) && props.isLoggedIn === true){
+      navigate('/teacher_home');
+    }
+    else if(commonComponentNames.includes(props.componentName) && props.isLoggedIn === false){
+      navigate('/choice_page');
+    }
   }
   return (
     <div>
@@ -40,9 +55,9 @@ export default function Navbar(props) {
           <div className="collapse navbar-collapse" id="navbarNavDropdown">
             <ul className="navbar-nav">
               <li className="nav-item my-2">
-                <Link className="nav-link active text-white" aria-current="page" to="/">
+                <button onClick={handleHomeClick} className="nav-link active text-white" aria-current="page">
                   Home
-                </Link>
+                </button>
               </li>
               <li className="nav-item mx-2 my-2">
                 <a className="nav-link text-white" href="#">

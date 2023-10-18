@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Layout from '../commonComponents/Layout'
 import axios from 'axios'
 import { getTeacherDetails } from './Tclogin';
+import Navbar from '../commonComponents/Navbar'
 
 export default function Schtest() {
     useEffect(()=>{
@@ -165,6 +166,7 @@ export default function Schtest() {
     } 
   return (
     <Layout>
+        <Navbar title='AptiPro' isLoggedIn={true} componentName='Schtest'/>
         <div className="card container w-50" style={scheduleFormStyle}>
             <div className="card-body">
                 <div className='d-flex justify-content-center'>

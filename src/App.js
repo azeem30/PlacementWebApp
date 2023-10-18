@@ -15,8 +15,7 @@ import { Routes, Route } from 'react-router-dom';
 function App() {
   //Aptify is a temporary title
   return (
-    <>  
-    <Navbar title='Aptify' isLoggedIn={false}/>
+    <> 
     <Routes>
       <Route exact path="/" Component={Choice}/> 
       <Route exact path="/student_signup" Component={Stsign}/>

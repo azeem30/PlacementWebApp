@@ -3,6 +3,7 @@ import Layout from '../commonComponents/Layout'
 import { getStudentDetails } from './Stlogin';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Navbar from '../commonComponents/Navbar';
 
 export default function Tests() {
     useEffect(()=>{getPendingTests();}, []);
@@ -61,6 +62,7 @@ export default function Tests() {
     }
   return (
     <Layout>
+        <Navbar title='AptiPro' isLoggedIn={true} componentName='Tests'/>
         <div className="container d-flex justify-content-center" style={containerStyle}>
             <div class="card" style={testListCardStyle}>
                 <div class="card-body">

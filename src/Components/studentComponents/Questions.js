@@ -4,6 +4,7 @@ import Layout from '../commonComponents/Layout'
 import axios from 'axios';
 import CountdownTimer from './timer';
 import { getStudentDetails } from './Stlogin'
+import Navbar from '../commonComponents/Navbar'
 
 export default function Questions() {
   const location = useLocation();
@@ -170,6 +171,7 @@ export default function Questions() {
   }
   return (
     <Layout>
+      <Navbar title='AptiPro' isLoggedIn= {true} componentName='Questions'/>
       <div style={detailContainer} className='bg-warning-subtle border-bottom border-warning'>
         <div className="d-flex justify-content-evenly">
           <p style={detailStyle} className='mx-3'>Title: <span className='fw-semibold'>{test.test_title}</span></p>

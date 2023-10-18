@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import Layout from '../commonComponents/Layout';
+import Navbar from '../commonComponents/Navbar';
 
 export default function TcHome() {
     let imageStyle = {
@@ -13,6 +14,7 @@ export default function TcHome() {
     };
   return (
     <Layout>
+      <Navbar title='AptiPro' isLoggedIn={true} componentName='Tchome'/>
       <div className='d-flex justify-content-evenly'>
         <div className="card text-center mb-3 border border-danger border-2" style={cardStyle}>
         <img style={imageStyle} src="https://cdn.britannica.com/30/220330-050-339CB471/Multiple-Choice-Test-Exam.jpg?w=600&q=60" className="card-img-top" alt="..."/>
