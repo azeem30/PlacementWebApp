@@ -11,6 +11,7 @@ import Tests from './Components/studentComponents/Tests';
 import Choice from './Components/commonComponents/Choice';
 import Questions from './Components/studentComponents/Questions';
 import { Routes, Route } from 'react-router-dom';
+import AddQuestions from './Components/teacherComponents/AddQuestions';
 
 function App() {
   //Aptify is a temporary title
@@ -27,6 +28,7 @@ function App() {
       <Route exact path='/schedule_test' Component={Schtest}/>
       <Route exact path='/pending_tests' Component={Tests}/>
       <Route exact path='/question_and_answer' Component={Questions}/>
+      <Route exact path='/add_question' Component={AddQuestions}/>
     </Routes>
     </>
   );

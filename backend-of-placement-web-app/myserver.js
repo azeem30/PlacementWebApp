@@ -397,4 +397,48 @@ app.post('/submit_response', (req, res)=>{
     }
 });
 
+app.post('/get_last_question', (req, res)=>{
+    try{
+        const {roll_no, email, name, password, department_id} = req.body.ti;
+        const selectQuery = `SELECT * FROM questions_dataset ORDER BY question_id DESC LIMIT 1`;
+        db.query(selectQuery, (error, results)=>{
+            if(error){
+                console.error('Error querying MySQL:', error);
+                res.status(500).json({ error: 'Internal Server Error' });
+            }
+            else{
+                if(results.length === 0){
+                    res.status(401).json({error: 'No match found!'});
+                }
+                else{
+                    const lastQuestionId = results[0].question_id;
+                    res.status(200).json({lastQuestionId});
+                }
+            }
+        })
+    }
+    catch(error){
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+app.post('/add_question', (req, res)=>{
+    try{
+        const {question_id, question_text, option1, option2, option3, option4, correct_option, question_difficulty, subject_id, subject_name} = req.body.question;
+        const insertQuery = `INSERT INTO questions_dataset values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`
+        const values = [question_id, question_text, option1, option2, option3, option4, correct_option, question_difficulty, subject_id, subject_name]
+        db.query(insertQuery, values, (error, results)=>{
+            if(error){
+                console.error('Error querying MySQL:', error);
+                res.status(500).json({ error: 'Internal Server Error' });
+            }
+            else{
+                res.status(200).json({message: 'Question Added Successfully!'});
+            }
+        })
+    }catch(error){
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
 app.listen(port, ()=>{console.log('Listening on port', port)});

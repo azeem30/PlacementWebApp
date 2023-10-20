@@ -11,7 +11,6 @@ export default function Schtest() {
     const [subjects, setSubjects] = useState([]);
     const [selectedSubject, setSelectedSubject] = useState(0);
     const [department, setDepartment] = useState('');
-    const [date, setDate] = useState(null);
     const [messageClass, setMessageClass] = useState('text-success');
     const [isConfirmationBoxVisible, setConfirmationBoxVisible] = useState(false);
     const scheduleFormStyle = {
@@ -111,7 +110,6 @@ export default function Schtest() {
                 const teacherSubjects = response.data;
                 const tsl = teacherSubjects.teacherSubjectsList;
                 setSubjects(tsl);
-                console.log(tsl);
             }
             else{
                 console.log(`Failed to fetch teacher's subjects`);
