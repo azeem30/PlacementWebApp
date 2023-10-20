@@ -91,7 +91,8 @@ export default function AddQuestions() {
                 displayMessage.textContent = 'Question Added Successfully!';
             }
             else{
-                console.log('Failed to Add Question');
+                setMessageClass('text-danger');
+                displayMessage.textContent = 'Failed to Add Question';
             }
         }catch(error){
             if (error.response) {
