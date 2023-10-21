@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import Layout from '../commonComponents/Layout'
 import axios from 'axios';
 import CountdownTimer from './timer';
@@ -8,6 +8,7 @@ import Navbar from '../commonComponents/Navbar'
 
 export default function Questions() {
   const location = useLocation();
+  const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
   const testJSON = queryParams.get('data');
   const test = JSON.parse(decodeURIComponent(testJSON));
@@ -82,7 +83,7 @@ export default function Questions() {
     axios.post('http://localhost:9999/submit_response', {testResponse}).
     then((response)=>{
       setIsLoading(false);
-      setResponseMessage('Test Submitted Successfully!')
+      setResponseMessage('Test Submitted Successfully!');
     }).
     catch((error)=>{
       setIsLoading(false);
@@ -169,6 +170,9 @@ export default function Questions() {
     closeConfirmationBox();
     submitResponse();
   }
+  const handleTimerExpiration = () => {
+    submitResponse();
+  }
   return (
     <Layout>
       <Navbar title='AptiPro' isLoggedIn= {true} componentName='Questions'/>
@@ -214,7 +218,7 @@ export default function Questions() {
         </div>
         <div className='d-flex justify-content-around'>
               <button className='btn btn-primary border border-dark my-2' onClick={handlePreviousQuestion}>Previous</button>
-              <CountdownTimer initialTime={test.test_duration * 60} /> 
+              <CountdownTimer initialTime={test.test_duration * 60} onTimerExpiration={handleTimerExpiration}/> 
               <button className='btn btn-primary border border-dark my-2' onClick={handleNextQuestion}>Next</button>
               <button disabled={!(currentQuestionIndex === randomizedQuestions.length -1)} onClick={handleSubmit} className="btn btn-success border border-dark my-2">Submit</button>
           </div>

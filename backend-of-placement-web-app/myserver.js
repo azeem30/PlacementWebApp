@@ -331,6 +331,33 @@ app.post('/get_pending_tests', (req, res)=>{
     }
 });
 
+app.post('/get_submitted_tests', (req, res)=>{
+    try{
+        const {roll_no, email, name, password, department_id} = req.body.si;
+        const selectQuery = `SELECT DISTINCT id FROM test_responses WHERE student_id = ?;`
+        const values = [roll_no];
+        db.query(selectQuery, values, (error, results)=>{
+            if(error){
+                console.error('Error querying MySQL:', error);
+                res.status(500).json({ error: 'Internal Server Error' });
+            }
+            else{
+                if(results.length === 0){
+                    res.status(401).json({ error: 'No match found' });
+                }
+                else{
+                    const submittedTestIds = results;
+                    res.status(200).json({submittedTestIds});
+                }
+            }
+        })
+    }
+    catch(error){
+        console.error('Error handling login request:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+})
+
 app.post('/questions', (req, res)=>{
     try{
         const {test_id, test_title, test_marks, test_duration, test_difficulty, subject_name} = req.body.test;
