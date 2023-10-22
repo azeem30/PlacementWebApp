@@ -9,6 +9,9 @@ export default function Navbar(props) {
   let logoutStyle ={
     marginLeft: '1150px'
   }
+  let navStyle = {
+    borderBottom: '0.5px solid black'
+  }
   const [isLogoutOpen, setLogoutOpen] = useState(false);
   const navigate = useNavigate();
   const handleLogoutClick = () => {
@@ -36,7 +39,7 @@ export default function Navbar(props) {
   }
   return (
     <div>
-      <nav className="navbar navbar-expand-lg bg-success opacity-75">
+      <nav className="navbar navbar-expand-lg bg-success opacity-75" style={navStyle}>
         <div className="container-fluid">
           <a className="navbar-brand text-white" href="#">
             {props.title}
