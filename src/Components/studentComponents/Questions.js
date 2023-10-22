@@ -56,7 +56,7 @@ export default function Questions() {
     let marks = 0.00;
     for (let i = 0; i < fetchedQuestions.length; i++){
       const fetchedQuestion = fetchedQuestions[i];
-      const userSelectedOption = userSelectedOptions.find((option)=> option.question_id === fetchedQuestion.question_id);
+      const userSelectedOption = userSelectedOptions.find((option)=> option?.question_id === fetchedQuestion.question_id);
       if(userSelectedOption){
         if(fetchedQuestion.correct_option === 'a' && userSelectedOption.option_key === 'option1'){
           marks += 3.33;
