@@ -361,4 +361,38 @@ app.post('/submit_response', (req, res)=>{
     }
 });
 
+app.post('/get_test_results', (req, res) => {
+    const { si } = req.body; 
+  
+    const query = `
+    SELECT 
+      t.title,
+      t.marks,
+      t.duration,
+      t.difficulty,
+      s.subject_name,
+      tr.marks_scored,
+      tr.percentage,
+      tr.id
+    FROM 
+      tests t
+    INNER JOIN 
+      subjects s ON t.subject_id = s.subject_id
+    INNER JOIN 
+      test_responses tr ON t.id = tr.id
+    WHERE 
+      tr.student_id = ?
+  `
+  
+    db.query(query, [si.roll_no], (error, results) => {
+      if (error) {
+        console.error('Error querying database:', error);
+        res.status(500).send('Internal Server Error');
+        return;
+      }
+  
+      res.json({ testResults:results });
+    });
+  });
+
 app.listen(port, ()=>{console.log('Listening on port', port)});
