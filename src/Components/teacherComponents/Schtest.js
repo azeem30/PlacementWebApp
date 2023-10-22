@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Layout from '../commonComponents/Layout'
 import axios from 'axios'
 import { getTeacherDetails } from './Tclogin';
+import Navbar from '../commonComponents/Navbar'
 
 export default function Schtest() {
     useEffect(()=>{
@@ -43,9 +44,16 @@ export default function Schtest() {
         testMarks: 0,
         testDuration: 0,
         testDifficulty: '',
+        testDate: '',
+        testTime: '',
         testSubject: 0,
         teacherEmail: ''
     });
+    const inputDate = (input) => {
+        const inputDateObject = new Date(input);
+        const isoString = inputDateObject.toISOString().slice(0,10);
+        setTestInfo({...testInfo, testDate: isoString});  
+    }
     const generateTestId = () => {
         const  chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
         const firstCharIndex = Math.floor(Math.random() * chars.length);
@@ -102,7 +110,6 @@ export default function Schtest() {
                 const teacherSubjects = response.data;
                 const tsl = teacherSubjects.teacherSubjectsList;
                 setSubjects(tsl);
-                console.log(tsl);
             }
             else{
                 console.log(`Failed to fetch teacher's subjects`);
@@ -126,6 +133,8 @@ export default function Schtest() {
                   marks: testInfo.testMarks,
                   duration: testInfo.testDuration,
                   difficulty: testInfo.testDifficulty,
+                  date: testInfo.testDate,
+                  time: testInfo.testTime,
                   subject_id: testInfo.testSubject,
                   teacher_email: testInfo.teacherEmail
         };
@@ -155,6 +164,7 @@ export default function Schtest() {
     } 
   return (
     <Layout>
+        <Navbar title='AptiPro' isLoggedIn={true} componentName='Schtest'/>
         <div className="card container w-50" style={scheduleFormStyle}>
             <div className="card-body">
                 <div className='d-flex justify-content-center'>
@@ -179,6 +189,32 @@ export default function Schtest() {
                             <li><a onClick={()=>{setTestInfo({...testInfo, testDuration: 120})}} className="dropdown-item">120 minutes</a></li>
                         </ul>
                 </div>
+                </div>
+                <div className="d-flex justify-content-around">
+                    <div className="mb-3">
+                        <label htmlFor="testDateInput" className="form-label fw-semibold">Date</label>
+                        <input
+                            type="date"
+                            onChange={(event) => {
+                                    inputDate(event.target.value); 
+                                }}
+                            className="form-control"
+                            id="testDateInput"
+                            style={textInputStyle}/>
+                    </div>
+                    <div className="mb-3">
+                        <label htmlFor="testTimeInput" className="form-label fw-semibold">Time</label>
+                        <input
+                                type="time"
+                                onChange={(event) => { 
+                                    const timeParts = event.target.value.split(':');
+                                    setTestInfo({ ...testInfo, testTime: `${timeParts[0]}:${timeParts[1]}:00` }); 
+                                }}
+                                className="form-control"
+                                id="testTimeInput"
+                                style={textInputStyle}
+                        />
+                    </div>
                 </div>
                 <div className='d-flex justify-content-around' style={bottomDiv}>
                     <div className="dropdown">
@@ -227,6 +263,8 @@ export default function Schtest() {
                                     <p className='fw-medium'>Marks: <span className='fw-normal'>{`${testInfo.testMarks}`}</span></p>
                                     <p className='fw-medium'>Duration: <span className='fw-normal'>{`${testInfo.testDuration} minutes`}</span></p>
                                     <p className='fw-medium'>Difficulty: <span className='fw-normal'>{`${testInfo.testDifficulty}`}</span></p>
+                                    <p className='fw-medium'>Date: <span className='fw-normal'>{`${testInfo.testDate}`}</span></p>
+                                    <p className='fw-medium'>Time: <span className='fw-normal'>{`${testInfo.testTime}`}</span></p>
                                     <p className='fw-medium'>Subject: <span className='fw-normal'>{getSubjectNameById(testInfo.testSubject)}</span></p>
                                     <p className='d-flex justify-content-center fw-semibold'>Are you sure you want to schedule this test?</p>
                             </div>

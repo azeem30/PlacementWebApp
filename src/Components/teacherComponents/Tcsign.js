@@ -12,7 +12,7 @@ export default function Tcsign() {
   const [tDepartment, tSetDepartment] = useState(0);
   const [tMail, tSetMail] = useState('');
   const [tPassword, tSetPassword] = useState('');
-  const [messageClass, setMessageClass] = useState(`text-success`);
+  const [alert, setAlert] = useState(null);
 
   const teacherData = {
     roll_no: tRoll,
@@ -25,7 +25,6 @@ export default function Tcsign() {
   const registerTeacher = () => {
     const teacherEmailError = document.getElementById('teacher-email-error');
     const teacherPasswordError = document.getElementById('teacher-password-error');
-    const registration_message = document.getElementById('registration-message');
     if(!emailPattern.test(tMail)){
       teacherEmailError.textContent = 'Invalid email format!'
     }
@@ -36,20 +35,11 @@ export default function Tcsign() {
         axios.post(`http://localhost:9999/teacher_signup`, {teacherData}).
         then((res) => 
         {
-          registration_message.textContent='Registration Successful!';
+          setAlert({type: 'success', message: 'Registration Successful!'});
           navigate('/teacher_login');
         })
         .catch((error) => {
-          if (error.response) {
-            setMessageClass(`text-danger`);
-            registration_message.textContent = `Server Error: ${error.response.data}`; //idhar server error thoda defined chaiye like already exists hai toh frontend pe 'Server Error: [object object]' display kar ra instead show already registered
-          } else if (error.request) {
-            setMessageClass(`text-danger`);
-            registration_message.textContent = `No response received from the server`;
-          } else {
-            setMessageClass(`text-danger`);
-            registration_message.textContent = `Request Error: ${error.message}`;
-          }
+          setAlert({ type: 'danger', message: 'Registration Unsuccessful: ' + error.response?.data || 'Server Error' });
         }).finally(()=>{      
       teacherEmailError.textContent = "";
       teacherPasswordError.textContent = '';})
@@ -114,7 +104,11 @@ let signButtonStyle ={
             <div className="d-flex justify-content-center" style={signButtonStyle}>
                 <button type="button" onClick={registerTeacher} className="btn btn-outline-success">Register</button>
             </div>
-            <p className={messageClass + ' d-flex justify-content-center mt-3'} id='registration-message'></p>
+            {alert && (
+            <div className={`alert alert-${alert.type} d-flex justify-content-center mt-3`} role="alert">
+              {alert.message}
+            </div>
+            )}
         </div>
       </form>
     </Layout>

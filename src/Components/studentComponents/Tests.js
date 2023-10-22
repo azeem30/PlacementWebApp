@@ -3,17 +3,18 @@ import Layout from '../commonComponents/Layout'
 import { getStudentDetails } from './Stlogin';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Navbar from '../commonComponents/Navbar';
 
 export default function Tests() {
     useEffect(()=>{getPendingTests();}, []);
     const [tests, setTests] = useState([]);
     const navigate = useNavigate();
     let testListCardStyle = {
-        width: '18rem'
+        width: '90%'
     }
     let containerStyle = {
         position:'relative',
-        top: '4%'
+        top: '4%',
     }
     let separator = {
         height: '0.5px',
@@ -32,13 +33,30 @@ export default function Tests() {
         try{
             const studentDetails = getStudentDetails();
             const si = studentDetails.studentInfo;
-            const response  = await axios.post('http://localhost:9999/get_pending_tests', {si});
-            if(response.status === 200){
-                console.log(response.data.pendingTestDetails);
-                setTests(response.data.pendingTestDetails);
+            const responseOfTests  = await axios.post('http://localhost:9999/get_pending_tests', {si});
+            if(responseOfTests.status === 200){
+                const pendingTests = responseOfTests.data.pendingTestDetails.map((test)=>{
+                    const testDateTime = new Date(`${test.test_date}T${test.test_time}`);
+                    const currentDateTime = new Date();
+                    const isTestReady = testDateTime <= currentDateTime ;
+                    return {
+                        ...test,
+                        isReady: isTestReady,
+                    }
+                });
+                setTests(pendingTests);
             }
             else{
                 console.log('Failed to get data');
+            }
+            const responseOfSubmittedTests = await axios.post('http://localhost:9999/get_submitted_tests', {si});
+            if(responseOfSubmittedTests.status === 200){
+                const submittedTests = responseOfSubmittedTests.data.submittedTestIds;
+                const filteredPendingTests = tests.filter((test) => !submittedTests.includes(test.test_id));
+                setTests(filteredPendingTests);
+            }
+            else{
+                console.log('Failed to fetch Submitted tests!');
             }
         }catch(error){
             if (error.response) {
@@ -53,28 +71,35 @@ export default function Tests() {
     }
   return (
     <Layout>
+        <Navbar title='AptiPro' isLoggedIn={true} componentName='Tests'/>
         <div className="container d-flex justify-content-center" style={containerStyle}>
-            <div class="card w-75" style={testListCardStyle}>
+            <div class="card" style={testListCardStyle}>
                 <div class="card-body">
                     <div className='d-flex justify-content-center'>
                         <h4 class="card-title">Pending Tests</h4>
                     </div>
                     <div className='bg-secondary' style={separator}></div>
                     <div className='mb-3'>
-                        <ol class="list-group">
-                            {tests.map((test, index)=>(
-                                <div className='d-flex justify-content-evenly' key={index}>
-                                    <li className='d-flex w-100 my-2 justify-content-between text-wrap rounded border border-success-subtle list-group-item'>
-                                        <p className='my-2'>Title: <span className='fw-semibold'>{test.test_title}</span></p>
-                                        <p className='my-2'>Marks: <span className='fw-semibold'>{test.test_marks}</span></p>
-                                        <p className='my-2'>Duration: <span className='fw-semibold'>{`${test.test_duration} minutes`}</span></p>
-                                        <p className='my-2'>Difficulty: <span className='fw-semibold'>{test.test_difficulty}</span></p>
-                                        <p className='my-2'>Subject: <span className="fw-semibold">{test.subject_name}</span></p>
-                                        <button onClick = {()=>startTest(test)}className='btn btn-success' style={startButtonStyle}>Start</button>
-                                    </li>
-                                </div>
-                            ))}
-                        </ol>
+                    {tests.length === 0 ? (
+                                <p className='d-flex justify-content-center fw-normal'>No tests scheduled for you at the moment!</p>
+                            ) : (
+                                <ol className="list-group">
+                                    {tests.map((test, index) => (
+                                        <div className='d-flex justify-content-evenly' key={index}>
+                                            <li className='d-flex w-100 my-2 justify-content-between text-wrap rounded border border-success-subtle list-group-item'>
+                                                <p className='my-2'>Title: <span className='fw-semibold'>{test.test_title}</span></p>
+                                                <p className='my-2'>Marks: <span className='fw-semibold'>{test.test_marks}</span></p>
+                                                <p className='my-2'>Duration: <span className='fw-semibold'>{`${test.test_duration} minutes`}</span></p>
+                                                <p className='my-2'>Difficulty: <span className='fw-semibold'>{test.test_difficulty}</span></p>
+                                                <p className='my-2'>Subject: <span className="fw-semibold">{test.subject_name}</span></p>
+                                                <p className='my-2'>Date: <span className="fw-semibold">{test.test_date?.slice(0, 10)}</span></p>
+                                                <p className='my-2'>Time: <span className="fw-semibold">{test.test_time}</span></p>
+                                                <button onClick={() => startTest(test)} disabled={!test.isReady} className='btn btn-success' style={startButtonStyle}>Start</button>
+                                            </li>
+                                        </div>
+                                    ))}
+                                </ol>
+                    )}
                     </div>
                 </div>
             </div>
