@@ -33,7 +33,7 @@ export default function TcHome() {
             </div>
         </div>
         <div className="card text-center mb-3 border border-danger border-2" style={cardStyle}>
-        <img style={imageStyle} src="https://cdn.britannica.com/30/220330-050-339CB471/Multiple-Choice-Test-Exam.jpg?w=600&q=60" className="card-img-top" alt="..."/>
+        <img style={imageStyle} src="https://cdn.theatlantic.com/thumbor/Ot_erThCQgVVk016M-nKJrG_HhE=/603x0:4203x2700/1200x900/media/img/mt/2023/01/Dumb_Questions_02/original.jpg" className="card-img-top" alt="..."/>
             <div className="card-body">
                 <h5 className="card-title">Add Questions!</h5>
                 <p className="card-text">Add the questions of your choice into the dataset if you want.</p>
