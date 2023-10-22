@@ -9,6 +9,7 @@ import Stsign from './Components/studentComponents/Stsign';
 import Tcsign from './Components/teacherComponents/Tcsign';
 import Tests from './Components/studentComponents/Tests';
 import Choice from './Components/commonComponents/Choice';
+import Teacher_results from './Components/teacherComponents/teacher_result';
 import { Routes, Route } from 'react-router-dom';
 import Questions from './Components/studentComponents/Questions';
 import CheckStudentResults from './Components/studentComponents/CheckStudentResults';
@@ -30,6 +31,7 @@ function App() {
       <Route exact path='/pending_tests' Component={Tests}/>
       <Route exact path='/question_and_answer' Component={Questions}/>
       <Route exact path='/student_results' Component={CheckStudentResults}/>
+      <Route exact path='/teacher_results' Component={Teacher_results}/>
     </Routes>
     </>
   );
