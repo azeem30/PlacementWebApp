@@ -1,6 +1,7 @@
 import React from 'react'
 import Layout from './Layout'
 import { Link } from 'react-router-dom'
+import Navbar from './Navbar'
 
 export default function Choice() {
     let linkStyle = {
@@ -23,6 +24,7 @@ export default function Choice() {
     }
   return (
         <Layout>
+            <Navbar title='AptiPro' isLoggedIn={false} componentName='Choice'/>
             <div className='d-flex justify-content-center'>
                     <div class="card border border-dark-subtle mx-3" style={cardStyle}>
                         <img style={imageLeftStyle} src="https://img.freepik.com/free-vector/college-university-students-group-young-happy-people-standing-isolated-white-background_575670-66.jpg?w=2000" class="card-img-top" alt="..."/>
