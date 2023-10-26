@@ -29,7 +29,7 @@ export default function Sthome() {
             <div className="card-body">
                 <h5 className="card-title">Analyze your Results!</h5>
                 <p className="card-text">See where you lack and improve your performances.  </p>
-                <a href='#' className="btn btn-info fw-semibold border border-primary">Check Scores</a>
+                <Link to="/get_test_results" className="btn btn-info fw-semibold border border-primary">Check Scores</Link>
             </div>
         </div>
       </div>  
