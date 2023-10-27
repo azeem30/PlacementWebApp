@@ -16,7 +16,7 @@ app.use(express.json());
 const db = mysql2.createConnection({
     host: 'localhost',
     user: 'root',
-    password: 'abc123',
+    password: 'Azeem@123',
     database: 'placementwebapp'
 });
 app.post('/student_signup', (req, res) => {
