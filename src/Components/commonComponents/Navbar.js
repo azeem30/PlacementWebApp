@@ -24,8 +24,8 @@ export default function Navbar(props) {
     navigate('/');
   }
   const handleHomeClick = () =>{
-    const studentComponentNames = ['Sthome', 'Tests', 'Questions'];
-    const teacherComponentNames = ['Tchome', 'Schtest', 'AddQuestions'];
+    const studentComponentNames = ['Sthome', 'Tests', 'Questions', 'StudentResults'];
+    const teacherComponentNames = ['Tchome', 'Schtest', 'AddQuestions', 'TeacherResults'];
     const commonComponentNames = ['Choice'];
     if(studentComponentNames.includes(props.componentName) && props.isLoggedIn === true){
       navigate('/student_home');

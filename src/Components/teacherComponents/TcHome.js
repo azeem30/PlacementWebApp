@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Layout from '../commonComponents/Layout';
 import Navbar from '../commonComponents/Navbar';
 
@@ -29,7 +29,7 @@ export default function TcHome() {
             <div className="card-body">
                 <h5 className="card-title">Analyze the Results!</h5>
                 <p className="card-text">See where students lack and improve their performances.</p>
-                <a href="#" className="btn btn-info fw-semibold border border-primary">Check Scores</a>
+                <Link to="/teacher_results" className="btn btn-info fw-semibold border border-primary">Check Scores</Link>
             </div>
         </div>
         <div className="card text-center mb-3 border border-danger border-2" style={cardStyle}>
