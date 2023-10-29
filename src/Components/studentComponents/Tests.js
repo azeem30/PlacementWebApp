@@ -33,9 +33,10 @@ export default function Tests() {
         try{
             const studentDetails = getStudentDetails();
             const si = studentDetails.studentInfo;
-            const responseOfTests  = await axios.post('http://localhost:9999/get_pending_tests', {si});
-            if(responseOfTests.status === 200){
-                const pendingTests = responseOfTests.data.pendingTestDetails.map((test)=>{
+            const responseOfPendingTests  = await axios.post('http://localhost:9999/get_pending_tests', {si});
+            const responseOfSubmittedTests = await axios.post('http://localhost:9999/get_submitted_tests', {si});
+            if(responseOfSubmittedTests.status === 200 || responseOfPendingTests.status === 200){
+                const pendingTests = responseOfPendingTests.data.pendingTestDetails.map((test)=>{
                     const testDateTime = new Date(`${test.test_date}T${test.test_time}`);
                     const currentDateTime = new Date();
                     const isTestReady = testDateTime <= currentDateTime ;
@@ -44,19 +45,17 @@ export default function Tests() {
                         isReady: isTestReady,
                     }
                 });
-                setTests(pendingTests);
-            }
-            else{
-                console.log('Failed to get data');
-            }
-            const responseOfSubmittedTests = await axios.post('http://localhost:9999/get_submitted_tests', {si});
-            if(responseOfSubmittedTests.status === 200){
                 const submittedTests = responseOfSubmittedTests.data.submittedTestIds;
-                const filteredPendingTests = tests.filter((test) => !submittedTests.includes(test.test_id));
-                setTests(filteredPendingTests);
+                if(submittedTests.length > 0){
+                    const filteredPendingTests = pendingTests.filter((test) => !submittedTests.includes(test.test_id));
+                    setTests(filteredPendingTests);
+                }
+                else{
+                    setTests(pendingTests);
+                }
             }
             else{
-                console.log('Failed to fetch Submitted tests!');
+                console.log('Failed to get pending or submitted tests');
             }
         }catch(error){
             if (error.response) {

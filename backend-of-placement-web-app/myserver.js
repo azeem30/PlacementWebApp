@@ -370,7 +370,8 @@ app.post('/get_submitted_tests', (req, res)=>{
             }
             else{
                 if(results.length === 0){
-                    res.status(401).json({ error: 'No match found' });
+                    const submittedTestIds = [];
+                    res.status(200).json({submittedTestIds});
                 }
                 else{
                     const submittedTestIds = results;
