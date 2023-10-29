@@ -21,7 +21,7 @@ export default function TcHome() {
             <div className="card-body">
                 <h5 className="card-title">Conduct tests!</h5>
                 <p className="card-text">Prepare the students for the final aptitude.</p>
-                <Link to='/schedule_test' className="btn btn-info fw-semibold border border-primary">Schedule Test</Link>
+                <Link to='/schedule_test' className="btn btn-info fw-semibold border border-primary">Create Test</Link>
             </div>
         </div>
         <div className="card text-center mb-3 border border-danger border-2" style={cardStyle}>

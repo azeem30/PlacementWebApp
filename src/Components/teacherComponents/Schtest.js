@@ -168,7 +168,7 @@ export default function Schtest() {
         <div className="card container w-50" style={scheduleFormStyle}>
             <div className="card-body">
                 <div className='d-flex justify-content-center'>
-                    <h4 className='fw-semibold text-wrap'>Schedule a Test</h4>
+                    <h4 className='fw-semibold text-wrap'>Create a Test</h4>
                 </div>
                 <div className='mb-3 bg-dark-subtle' style={separator}></div>
                 <div className='d-flex justify-content-around' style={topDivStyle}>
@@ -249,7 +249,7 @@ export default function Schtest() {
                 </div>
                 <div className='mt-3 bg-dark-subtle' style={separator}></div>
                 <div className="d-flex justify-content-center mt-3">
-                    <button type="button" onClick={openConfirmationBox} className="btn btn-outline-success fw-semibold">Schedule Test</button>
+                    <button type="button" onClick={openConfirmationBox} className="btn btn-outline-success fw-semibold">Create Test</button>
                 </div>
                 <div className='modal' tabIndex='-1' role='dialog' style={{ display: isConfirmationBoxVisible ? 'block' : 'none' }}>
                     <div className="modal-dialog" role='document'>
