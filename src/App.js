@@ -13,6 +13,7 @@ import Questions from './Components/studentComponents/Questions';
 import { Routes, Route } from 'react-router-dom';
 import AddQuestions from './Components/teacherComponents/AddQuestions';
 import CheckStudentResults from './Components/studentComponents/CheckStudentResults';
+import DetailedResults from './Components/studentComponents/DetailedResults';
 import Teacher_results from './Components/teacherComponents/teacher_result';
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
       <Route exact path='/schedule_test' Component={Schtest}/>
       <Route exact path='/pending_tests' Component={Tests}/>
       <Route exact path="/get_test_results" Component={CheckStudentResults}></Route>
+      <Route exact path="/get_detailed_results" Component={DetailedResults}></Route>
       <Route exact path='/question_and_answer' Component={Questions}/>
       <Route exact path='/add_question' Component={AddQuestions}/>
       <Route exact path='/teacher_results' Component={Teacher_results}/>

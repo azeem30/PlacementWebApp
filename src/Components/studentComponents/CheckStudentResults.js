@@ -119,7 +119,7 @@ export default function CheckStudentResults() {
                                 <p className='my-2'>Subject name: <span className="fw-semibold">{result.subject_name}</span></p>
                                 <p className='my-2'>Marks Obtained: <span className="fw-semibold">{result.marks_scored}</span></p>
                                 <p className='my-2'>Percentage: <span className="fw-semibold">{`${parseFloat(result.percentage).toFixed(2)}%`}</span></p>
-                                <button>Detailed Result</button>
+                                <button onClick={() => navigate('/get_detailed_results')}>Detailed Result</button>
                             </li>
                         </div>
                     ))}
