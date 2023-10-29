@@ -16,7 +16,7 @@ app.use(express.json());
 const db = mysql2.createConnection({
     host: 'localhost',
     user: 'root',
-    password: 'abc123',
+    password: 'Azeem@123',
     database: 'placementwebapp'
 });
 app.post('/student_signup', (req, res) => {
@@ -260,6 +260,33 @@ app.post('/get_teacher_subjects', (req, res)=>{
     });
 });
 
+app.post('/get_student_subjects', (req, res)=>{
+    const {roll_no, email, name, password, department_id} = req.body.si;
+    const selectQuery = `SELECT subject_id, subject_name from (SELECT s.subject_id, s.subject_name
+    FROM subjects s 
+    WHERE s.department_id = ? 
+    UNION SELECT sa.subject_id, s.subject_name
+    FROM subject_access sa
+    JOIN subjects s ON sa.subject_id = s.subject_id
+    JOIN students st ON sa.user_id = st.email
+    WHERE st.email = ? AND st.department_id = ?) as combined_subjects;`
+    db.query(selectQuery, [department_id, email, department_id], (error, results)=>{
+        if(error){
+            console.error('Error querying MySQL:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+        else{
+            if(results.length === 0){
+                res.status(401).json({ error: 'Authentication failed. Invalid credentials.' });
+            }
+            else{
+                const studentSubjectsList = results;
+                res.status(200).json({studentSubjectsList});
+            }
+        }
+    });
+});
+
 app.post('/schedule_test', (req, res)=>{
     try{
         const {id, title, marks, duration, difficulty, date, time, subject_id, teacher_email} = req.body.testDetails;
@@ -424,7 +451,7 @@ app.post('/submit_response', (req, res)=>{
     }
 });
 
-app.post('/get_test_results', (req, res) => {
+app.post('/get_student_test_results', (req, res) => {
     const { si } = req.body; 
   
     const query = `
@@ -501,5 +528,37 @@ app.post('/add_question', (req, res)=>{
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+
+app.post('/get_teacher_test_results', (req, res) => {
+    const { ti } = req.body; 
+    const selectQuery = `
+        SELECT
+        t.title,
+        t.marks,
+        t.duration,
+        t.difficulty,
+        tr.marks_scored,
+        tr.percentage,
+        tr.id AS response_id,
+        s.subject_name
+    FROM
+        tests AS t
+    JOIN
+        test_responses AS tr ON t.id = tr.id
+    JOIN
+        subjects AS s ON t.subject_id = s.subject_id
+    WHERE
+        tr.teacher_id = ?`
+  
+    db.query(selectQuery, [ti.email], (error, results) => {
+      if (error) {
+        console.error('Error querying database:', error);
+        res.status(500).send('Internal Server Error');
+        return;
+      }
+  
+      res.json({ testResults: results });
+    });
+  });
 
 app.listen(port, ()=>{console.log('Listening on port', port)});
