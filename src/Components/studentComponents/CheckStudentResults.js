@@ -51,7 +51,7 @@ export default function CheckStudentResults() {
 
     return (
         <Layout>
-            <div style={containerStyle} className="container rounded w-50 bg-white">
+            <div style={containerStyle} className="container rounded w-100 bg-white">
                 <div className="d-flex justify-content-around">
                     <h4 style={headerStyle} className="card-title">Submitted Tests</h4>
                     <div className="btn-group my-2" style={buttonStyle}>
@@ -88,6 +88,7 @@ export default function CheckStudentResults() {
                                 <p className='my-2'>Subject name: <span className="fw-semibold">{result.subject_name}</span></p>
                                 <p className='my-2'>Marks Obtained: <span className="fw-semibold">{result.marks_scored}</span></p>
                                 <p className='my-2'>Percentage: <span className="fw-semibold">{result.percentage}</span></p>
+                                <button  >Detailed Result</button>
                             </li>
                         </div>
                     ))}
