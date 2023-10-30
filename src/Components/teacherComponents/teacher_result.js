@@ -6,12 +6,14 @@ import axios from 'axios';
 import { getTeacherDetails } from './Tclogin';
 import {useNavigate} from 'react-router';
 import Transitions from '../commonComponents/Trasitions';
+import Navbar from '../commonComponents/Navbar';
 
 export default function Teacher_results(){
     useEffect(()=>{
         getTeacherTestResponses();
     }, []);
    const [testResponses, setTestResponses] = useState([]); 
+   const [subjects, setSubjects] = useState([]);
     let containerStyle = {
         position: 'relative',
         top: '3%',
@@ -22,7 +24,7 @@ export default function Teacher_results(){
         marginTop: '3px'
     }
     let buttonStyle = {
-        height:'40px'
+        height:'40px',
     }
     let headerStyle = {
         position: 'relative',
@@ -34,7 +36,7 @@ export default function Teacher_results(){
         try{
             const teacherDetails = getTeacherDetails();
             const ti = teacherDetails.teacherInfo;
-            const response = axios.post('http://localhost:9999/getteacher_test_results', {ti});
+            const response = await axios.post('http://localhost:9999/get_teacher_test_results', {ti});
             if(response.status === 200){
                 const fetchedResponses = response.data.testResults;
                 console.log('Tests fetched successfully!');
@@ -57,28 +59,59 @@ export default function Teacher_results(){
             console.error('Error' , error.message);
             }
         }
+        try{
+            const teacherDetails = getTeacherDetails();
+            const ti = teacherDetails.teacherInfo;
+            const response = await axios.post('http://localhost:9999/get_teacher_subjects', {ti});
+            if(response.status === 200){
+                const teacherSubjects = response.data;
+                const tsl = teacherSubjects.teacherSubjectsList;
+                setSubjects(tsl);
+            }
+            else{
+                console.log(`Failed to fetch teacher's subjects`);
+            }
+        }catch(error){
+            if(error.response){
+                console.error('Response Error', error.response.status);
+                console.error('Response Data',error.response.data)
+                } 
+            else if (error.request) {
+                console.error('No Response received:', error.request);
+                } 
+            else {
+                console.error('Error' , error.message);
+                }
+        }
     }
-
         return (
             <Layout>
-                <div style={containerStyle} className="container rounded w-50 bg-white">
+                <Navbar title='AptiPro' isLoggedIn={true} componentName='TeacherResults'/>
+                <div style={containerStyle} className="container rounded bg-white">
                     <div className="d-flex justify-content-around">
                         <h4 style={headerStyle} className="card-title">Submitted Tests</h4>
                         <div className="btn-group my-2" style={buttonStyle}>
-                            <button type="button" className="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            <button type="button" id='subject_display' className="btn mt-1 btn-white text-dark fw-semibold dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                                 Subjects
                             </button>
                             <ul className="dropdown-menu">
-                                <li><a className="dropdown-item" href="#">D.S.A</a></li>
-                                <li><a className="dropdown-item" href="#">D.B.M.S</a></li>
-                                <li><a className="dropdown-item" href="#">Java</a></li>
-                                <li><a className="dropdown-item" href="#">Python</a></li>
-                                <li><a className="dropdown-item" href="#">OS</a></li>
-                                <li><a className="dropdown-item" href="#">Aptitude</a></li>
+                                {
+                                    subjects.map((subject, index)=>(
+                                        <li 
+                                            className='dropdown-item'
+                                            key={subject.subject_id}
+                                            onClick={()=>{
+                                                const subjectDisplay = document.getElementById('subject_display');
+                                                subjectDisplay.textContent = subject.subject_name 
+                                            }}>
+                                            {subject.subject_name}
+                                        </li>
+                                    ))
+                                }
                             </ul>
                         </div>
                         <div className="btn-group my-2" style={buttonStyle}>
-                            <button type="button" className="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            <button type="button" className="btn mt-1 btn-white text-dark fw-semibold dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                                 Sort by
                             </button>
                             <ul className="dropdown-menu">
@@ -88,7 +121,7 @@ export default function Teacher_results(){
                     </div>
                     <div className="bg-secondary" style={separator}></div>
                     <div className="list-group">
-                        {/*testResults.map((result, index) => (
+                        {testResponses.map((result, index) => (
                             <div className='d-flex justify-content-evenly' key={index}>
                                 <li className='d-flex w-100 my-2 justify-content-between text-wrap rounded border border-success-subtle list-group-item'>
                                     <p className='my-2'>Title: <span className='fw-semibold'>{result.title}</span></p>
@@ -97,10 +130,10 @@ export default function Teacher_results(){
                                     <p className='my-2'>Difficulty: <span className='fw-semibold'>{result.difficulty}</span></p>
                                     <p className='my-2'>Subject name: <span className="fw-semibold">{result.subject_name}</span></p>
                                     <p className='my-2'>Marks Obtained: <span className="fw-semibold">{result.marks_scored}</span></p>
-                                    <p className='my-2'>Percentage: <span className="fw-semibold">{result.percentage}</span></p>
+                                    <p className='my-2'>Percentage: <span className="fw-semibold">{`${parseFloat(result.percentage).toFixed(2)}%`}</span></p>
                                 </li>
                             </div>
-                        ))*/}
+                        ))}
                     </div>
                 </div>
             </Layout>

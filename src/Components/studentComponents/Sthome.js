@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Layout from '../commonComponents/Layout';
 import { Link } from 'react-router-dom';
-import Transitions from '../commonComponents/Trasitions';
+import Navbar  from '../commonComponents/Navbar';
 
 export default function Sthome() {
     let imageStyle = {
@@ -13,8 +13,8 @@ export default function Sthome() {
         top: '20px',
     };
   return (
-  <Transitions>
     <Layout>
+      <Navbar title='AptiPro' isLoggedIn={true} componentName='Sthome'/>
       <div className='d-flex justify-content-evenly'>
         <div className="card text-center mb-3 border border-danger border-2" style={cardStyle}>
         <img style={imageStyle} src="https://www.teachingenglish.org.uk/sites/teacheng/files/styles/wide/public/images/teens_and_exams_iStock_000005780399XSmall_0.jpg?itok=ElZYWt14" className="card-img-top" alt="..."/>
@@ -29,11 +29,10 @@ export default function Sthome() {
             <div className="card-body">
                 <h5 className="card-title">Analyze your Results!</h5>
                 <p className="card-text">See where you lack and improve your performances.  </p>
-                <Link to='/student_results' className="btn btn-info fw-semibold border border-primary">Check Scores</Link>
+                <Link to="/get_test_results" className="btn btn-info fw-semibold border border-primary">Check Scores</Link>
             </div>
         </div>
       </div>  
     </Layout>
-  </Transitions> 
   )
 }
