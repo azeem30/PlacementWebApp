@@ -14,6 +14,8 @@ export default function Teacher_results(){
     }, []);
    const [testResponses, setTestResponses] = useState([]); 
    const [subjects, setSubjects] = useState([]);
+   const [filter, setFilter] = useState('');
+   const [isLoading, setIsLoading] = useState(true);
     let containerStyle = {
         position: 'relative',
         top: '3%',
@@ -31,7 +33,6 @@ export default function Teacher_results(){
         top: '17px',
         left: '-50px'
     }   
-        
     const getTeacherTestResponses = async () => {
         try{
             const teacherDetails = getTeacherDetails();
@@ -82,17 +83,27 @@ export default function Teacher_results(){
             else {
                 console.error('Error' , error.message);
                 }
+        }finally{
+            setIsLoading(false);
         }
     }
+    const handleFilter = (subject) => {
+        setFilter(subject);
+    }
+    const filteredTestResponses = filter ? testResponses.filter((testResponse) => testResponse.subject_name === filter) : testResponses;
         return (
             <Layout>
                 <Navbar title='AptiPro' isLoggedIn={true} componentName='TeacherResults'/>
-                <div style={containerStyle} className="container rounded bg-white">
+                {isLoading ? (
+                    <p className='text-dark fw-lighter fs-12'>Loading...</p>
+                    ) : 
+                    (
+                    <div style={containerStyle} className="container rounded bg-white">
                     <div className="d-flex justify-content-around">
                         <h4 style={headerStyle} className="card-title">Submitted Tests</h4>
                         <div className="btn-group my-2" style={buttonStyle}>
                             <button type="button" id='subject_display' className="btn mt-1 btn-white text-dark fw-semibold dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                Subjects
+                                Filter
                             </button>
                             <ul className="dropdown-menu">
                                 {
@@ -102,7 +113,8 @@ export default function Teacher_results(){
                                             key={subject.subject_id}
                                             onClick={()=>{
                                                 const subjectDisplay = document.getElementById('subject_display');
-                                                subjectDisplay.textContent = subject.subject_name 
+                                                subjectDisplay.textContent = subject.subject_name
+                                                handleFilter(subject.subject_name); 
                                             }}>
                                             {subject.subject_name}
                                         </li>
@@ -121,7 +133,7 @@ export default function Teacher_results(){
                     </div>
                     <div className="bg-secondary" style={separator}></div>
                     <div className="list-group">
-                        {testResponses.map((result, index) => (
+                        {filteredTestResponses.map((result, index) => (
                             <div className='d-flex justify-content-evenly' key={index}>
                                 <li className='d-flex w-100 my-2 justify-content-between text-wrap rounded border border-success-subtle list-group-item'>
                                     <p className='my-2'>Title: <span className='fw-semibold'>{result.title}</span></p>
@@ -136,6 +148,7 @@ export default function Teacher_results(){
                         ))}
                     </div>
                 </div>
+                )}
             </Layout>
         )
 }
