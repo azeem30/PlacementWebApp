@@ -248,7 +248,7 @@ export default function Questions() {
         <div className="modal-dialog" role='document'>
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title">Confirm Scheduling</h5>
+              <h5 className="modal-title">Confirm Submission</h5>
               <button type="button" className="btn btn-danger" onClick={closeConfirmationBox} aria-label="Close">&times;</button>
             </div>
             <div className="modal-body d-block">
