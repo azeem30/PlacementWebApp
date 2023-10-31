@@ -30,7 +30,7 @@ export default function Questions() {
           const shuffledQuestions = shuffleArray(questions);
           setFetchedQuestions(questions);
           setRandomizedQuestions(shuffledQuestions);
-          setUserSelectedOptions(new Array(fetchedQuestions.length).fill({question_id: null, question_text: '', option_key: '', selected_option: ''}));
+          setUserSelectedOptions(new Array(fetchedQuestions.length).fill({question_id: null, question_text: '', selected_key: '', selected_text: '', correct_key: '', correct_text: ''}));
         }
         else{
           console.log('Failed to get data');
@@ -58,15 +58,15 @@ export default function Questions() {
       const fetchedQuestion = fetchedQuestions[i];
       const userSelectedOption = userSelectedOptions.find((option)=> option?.question_id === fetchedQuestion.question_id);
       if(userSelectedOption){
-        if(fetchedQuestion.correct_option === 'a' && userSelectedOption.option_key === 'option1'){
+        if(fetchedQuestion.correct_option === 'a' && userSelectedOption.selected_key === 'option1'){
           marks += 3.33;
         }
-        else if(fetchedQuestion.correct_option === 'b' && userSelectedOption.option_key === 'option2'){
+        else if(fetchedQuestion.correct_option === 'b' && userSelectedOption.selected_key === 'option2'){
           marks += 3.33;
         }
-        else if(fetchedQuestion.correct_option === 'c' && userSelectedOption.option_key === 'option3'){
+        else if(fetchedQuestion.correct_option === 'c' && userSelectedOption.selected_key === 'option3'){
           marks += 3.33;
-        }else if(fetchedQuestion.correct_option === 'd' && userSelectedOption.option_key === 'option4'){
+        }else if(fetchedQuestion.correct_option === 'd' && userSelectedOption.selected_key === 'option4'){
           marks += 3.33;
         }
       }
@@ -132,13 +132,15 @@ export default function Questions() {
     }
     return shuffledArray;
   }
-  const handleOptionSelect = (questionId,questionText, optionIndex, optionText) => {
+  const handleOptionSelect = (questionId, questionText, selectedKey, selectedText, correctKey, correctText) => {
     const updatedSelectedOptions = [...userSelectedOptions];
     updatedSelectedOptions[currentQuestionIndex] = {
       question_id: questionId,
       question_text: questionText,
-      option_key: optionIndex,
-      selected_option: optionText
+      selected_key: selectedKey,
+      selected_text: selectedText,
+      correct_key: correctKey, 
+      correct_text: correctText
     }
     setUserSelectedOptions(updatedSelectedOptions);
     console.log(userSelectedOptions);
@@ -193,24 +195,43 @@ export default function Questions() {
         </div>
         <div className='border border-warning-subtle'>
           <ul className="list-group">
-          {['option1', 'option2', 'option3', 'option4'].map((optionKey) => (
-            <li className="list-group-item" key={optionKey}>
+          {['option1', 'option2', 'option3', 'option4'].map((selectedKey) => (
+            <li className="list-group-item" key={selectedKey}>
               <input
                 className="form-check-input me-1"
                 type="radio"
                 name={`question-${currentQuestionIndex}`}
-                value={optionKey}
-                id={`option-${optionKey}`}
-                checked={optionKey === userSelectedOptions[currentQuestionIndex]?.option_key}
+                value={selectedKey}
+                id={`option-${selectedKey}`}
+                checked={selectedKey === userSelectedOptions[currentQuestionIndex]?.selected_key}
                 onChange={() => {
                   const questionId = randomizedQuestions[currentQuestionIndex].question_id;
                   const questionText = randomizedQuestions[currentQuestionIndex].question_text;
-                  const optionText = randomizedQuestions[currentQuestionIndex][optionKey];
-                  handleOptionSelect(questionId,questionText, optionKey, optionText);
+                  const selectedText = randomizedQuestions[currentQuestionIndex][selectedKey];
+                  const questionObject = fetchedQuestions.find(question => question.question_id === randomizedQuestions[currentQuestionIndex].question_id);
+                  var correctKey, correctText;
+                  if(questionObject.correct_option === 'a'){
+                    correctKey = 'option1';
+                    correctText = randomizedQuestions[currentQuestionIndex]?.option1;
+                  }
+                  else if(questionObject.correct_option === 'b'){
+                    correctKey = 'option2';
+                    correctText = randomizedQuestions[currentQuestionIndex]?.option2;
+                  }
+                  else if(questionObject.correct_option === 'c'){
+                    correctKey = 'option3';
+                    correctText = randomizedQuestions[currentQuestionIndex]?.option3;
+                  }
+                  else if(questionObject.correct_option === 'd'){
+                    correctKey = 'option4';
+                    correctText = randomizedQuestions[currentQuestionIndex]?.option4;
+                  }
+                  console.log(questionObject);
+                  handleOptionSelect(questionId, questionText, selectedKey, selectedText, correctKey, correctText);
                  }}
               />
-              <label className="form-check-label text-wrap" htmlFor={`option-${optionKey}`}>
-                {randomizedQuestions[currentQuestionIndex]?.[optionKey]}
+              <label className="form-check-label text-wrap" htmlFor={`option-${selectedKey}`}>
+                {randomizedQuestions[currentQuestionIndex]?.[selectedKey]}
               </label>
             </li>
           ))} 
