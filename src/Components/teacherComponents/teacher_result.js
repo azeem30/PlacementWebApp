@@ -136,6 +136,7 @@ export default function Teacher_results(){
                         {filteredTestResponses.map((result, index) => (
                             <div className='d-flex justify-content-evenly' key={index}>
                                 <li className='d-flex w-100 my-2 justify-content-between text-wrap rounded border border-success-subtle list-group-item'>
+                                    <p className='my-2'>Roll: <span className='fw-semibold'>{result.roll_no}</span></p>
                                     <p className='my-2'>Title: <span className='fw-semibold'>{result.title}</span></p>
                                     <p className='my-2'>Marks: <span className='fw-semibold'>{result.marks}</span></p>
                                     <p className='my-2'>Duration: <span className='fw-semibold'>{`${result.duration} minutes`}</span></p>

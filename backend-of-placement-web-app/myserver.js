@@ -145,7 +145,6 @@ app.post('/teacher_signup', (req, res) => {
     }
 });
 
-
 app.post('/teacher_login', (req, res)=>{
     try{
         const {email, password} = req.body.loginTeacherData;
@@ -540,6 +539,7 @@ app.post('/get_teacher_test_results', (req, res) => {
         t.difficulty,
         tr.marks_scored,
         tr.percentage,
+        st.roll_no AS roll_no,
         tr.id AS response_id,
         s.subject_name
     FROM
@@ -548,6 +548,8 @@ app.post('/get_teacher_test_results', (req, res) => {
         test_responses AS tr ON t.id = tr.id
     JOIN
         subjects AS s ON t.subject_id = s.subject_id
+    JOIN
+        students AS st ON tr.student_id = st.roll_no
     WHERE
         tr.teacher_id = ?`
   
