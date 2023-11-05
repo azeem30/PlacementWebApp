@@ -2,8 +2,8 @@ import React,{ useState, useEffect } from 'react'
 import Layout from '../commonComponents/Layout'
 import { getStudentDetails } from './Stlogin';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 import Navbar from '../commonComponents/Navbar';
+import Transitions from '../commonComponents/Trasitions';
 
 export default function CheckStudentResults() {
     useEffect(() => { getTestResults(); }, []);
@@ -11,6 +11,7 @@ export default function CheckStudentResults() {
     const [subjects, setSubjects] = useState([]);
     const [filter, setFilter] = useState('');
     const [isLoading, setIsLoading] = useState(true);
+    const [sort, setSort] = useState('');
     let containerStyle = {
         position: 'relative',
         top: '3%',
@@ -77,8 +78,20 @@ export default function CheckStudentResults() {
     const handleFilter = (subject) => {
         setFilter(subject);
     }
+    const handleSort = (method) => {
+        setSort(method);
+        if(sort === 'Marks: High to Low'){
+            const sortedTestResponses = [...testResults].sort((a, b) => b.marks_scored - a.marks_scored);
+            setTestResults(sortedTestResponses);
+        }
+        else if(sort === 'Marks: Low to High'){
+            const sortedTestResponses = [...testResults].sort((a, b) => a.marks_scored - b.marks_scored);
+            setTestResults(sortedTestResponses);
+        }
+    }
     const filteredTestResponses = filter ? testResults.filter((result) => result.subject_name === filter) : testResults;
     return (
+        <Transitions>
         <Layout>
             <Navbar title='AptiPro' isLoggedIn={true} componentName='StudentResults' />
             {isLoading ? (
@@ -114,7 +127,8 @@ export default function CheckStudentResults() {
                             Sort by
                         </button>
                         <ul className="dropdown-menu">
-                            <li><a className="dropdown-item" href="#">Date</a></li>
+                            <li><a onClick={()=>{handleSort('Marks: High to Low')}} className="dropdown-item" href="#">Marks: High to Low</a></li>
+                            <li><a onClick={()=>{handleSort('Marks: Low to High')}} className="dropdown-item" href="#">Marks: Low to High</a></li>
                         </ul>
                     </div>
                 </div>
@@ -137,5 +151,6 @@ export default function CheckStudentResults() {
             </div>
             )}
         </Layout>
+        </Transitions>
     )
 }
