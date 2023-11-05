@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Layout from '../commonComponents/Layout'
-import { Link } from 'react-router-dom'
-import {emailPattern} from '../patterns/patterns'
 import axios from 'axios';
 import { getTeacherDetails } from './Tclogin';
-import {useNavigate} from 'react-router';
 import Transitions from '../commonComponents/Trasitions';
 import Navbar from '../commonComponents/Navbar';
 
@@ -16,6 +13,7 @@ export default function Teacher_results(){
    const [subjects, setSubjects] = useState([]);
    const [filter, setFilter] = useState('');
    const [isLoading, setIsLoading] = useState(true);
+   const [sort, setSort] = useState('');
     let containerStyle = {
         position: 'relative',
         top: '3%',
@@ -90,8 +88,20 @@ export default function Teacher_results(){
     const handleFilter = (subject) => {
         setFilter(subject);
     }
+    const handleSort = (method) => {
+        setSort(method);
+        if(sort === 'Marks: High to Low'){
+            const sortedTestResponses = [...filteredTestResponses].sort((a, b) => b.marks_scored - a.marks_scored);
+            setTestResponses(sortedTestResponses);
+        }
+        else if(sort === 'Marks: Low to High'){
+            const sortedTestResponses = [...filteredTestResponses].sort((a, b) => a.marks_scored - b.marks_scored);
+            setTestResponses(sortedTestResponses);
+        }
+    }
     const filteredTestResponses = filter ? testResponses.filter((testResponse) => testResponse.subject_name === filter) : testResponses;
         return (
+            <Transitions>
             <Layout>
                 <Navbar title='AptiPro' isLoggedIn={true} componentName='TeacherResults'/>
                 {isLoading ? (
@@ -127,7 +137,8 @@ export default function Teacher_results(){
                                 Sort by
                             </button>
                             <ul className="dropdown-menu">
-                                <li><a className="dropdown-item" href="#">Date</a></li>
+                                <li><a onClick={()=>{handleSort('Marks: High to Low')}} className="dropdown-item" href="#">Marks: High to Low</a></li>
+                                <li><a onClick={()=>{handleSort('Marks: Low to High')}} className="dropdown-item" href="#">Marks: Low to High</a></li>
                             </ul>
                         </div>
                     </div>
@@ -151,5 +162,6 @@ export default function Teacher_results(){
                 </div>
                 )}
             </Layout>
+            </Transitions>
         )
 }
